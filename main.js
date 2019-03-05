@@ -68,12 +68,16 @@ function patCard(name, lastName, phone, email, id) {
 // GO TO CREATE PATIENT BUTTON
 
 let goToCreatePat = document.querySelector("#goToCreatePat");
-goToCreatePat.onclick = function () {
-    console.log(this);
+goToCreatePat.onclick = function (e) {
+    window.location.href = this.getAttribute('href'); // da li treba da se pravi novi fajl sa imenom hrefa ? 
+    
+    // window.location.pathname = e.path[3].baseURI + this.getAttribute('href');
+    
+    console.log(e.path[3].baseURI + this.getAttribute('href'));
 
     createPatientDiv.classList.remove("hide");
     allPatDiv.className += " hide";
-    this.classList.add('hide');  // sakrio si button, probaj da ga stavis u div koji ces sakriti 
+    this.classList.add('hide');
     // getAllPatients();
 
 }
