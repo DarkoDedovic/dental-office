@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js">
+    <link rel="stylesheet" href="./style.css">
+
+    <!-- CONTAINER DIV -->
+
+    <div id='containerDiv' class="container">
+        <div class="logoContainer">
+            <img class="logo" src="./images/doctor.jpg" alt="">
+        </div>
+        <div class="logInOrReg">
+            <div><a class="activeUnderline" id="login-form-link">Login</a></div>
+            <div><a class="" id="register-form-link">Register</a></div>
+        </div>
+        <!-- LOGIN -->
+        <form class="loginForm shadow-none p-3 mb-5 bg-light rounded">
+            <div class="form-group">
+                <label for="inputUsername">Email</label>
+                <input type="email" class="form-control" id="inputUsername" placeholder="Email">
+            </div>
+            <div class="form-group">
+                <label for="inputPassword">Password</label>
+                <input type="text" class="form-control" id="inputPassword" placeholder="Password">
+            </div>
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="checkRemember">
+                <label class="form-check-label" for="checkRemember">Remember
+                    me</label>
+            </div>
+            <button type="submit" class="btn btn-primary" id="logInBtn">Log
+                In</button>
+            <div>
+                <a id="forgotPass" class="forgotPassword">Forgot
+                    Passwords</a>
+            </div>
+        </form>
+
+        <!-- REGISTER -->
+        <form class="registerForm shadow-none p-3 mb-5 bg-light hide">
+            <div class="form-row">
+                <div class="form-group col-md-12 required">
+                    <label for="regEmail">Email</label>
+                    <input type="email" class="form-control" id="regEmail" placeholder="Email">
+                </div>
+                <div class="form-group col-md-12 required">
+                    <label for="regUserName">Username</label>
+                    <input type="text" class="form-control" id="regUserName" placeholder="Username">
+                </div>
+                <div class="form-group col-md-12 required">
+                    <label for="regPassword">Password</label>
+                    <input type="password" class="form-control" id="regPassword" placeholder="Password">
+                </div>
+                <div class="form-group col-md-12 required">
+                    <label for="regConfirmPassword">Confirm password</label>
+                    <input type="password" class="form-control" id="regConfirmPassword" placeholder="Confirm Password">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="gridCheck">
+                    <label class="form-check-label" for="gridCheck">
+                        Check me out
+                    </label>
+                </div>
+            </div>
+            <button id="signUp" class="btn btn-primary">Sign Up</button>
+        </form>
+    </div>
+
+    <!-- CREATE PATIENT -->
+    <div id='createPatientDiv' class="container hide">
+        <div class="patientLogo">
+            <img src="./images/doctor.jpg" id="patientImg" alt="">
+        </div>
+        <form action="">
+            <div class="form-group">
+                <input type="text" class="form-control" id="patientName" placeholder="First Name">
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" id="patientLastName" placeholder="Last Name">
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" id="patientEmail" placeholder="Email">
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" id="patientPhoneNum" placeholder="Phone num">
+            </div>
+            <button id="createPatBtn" class="btn btn-primary">Create Patient</button>
+            <p id="emergencyMsg"></p>
+        </form>
+    </div>
+
+    <!-- ALL PATIENTS -->
+
+    <div class="container">
+
+        <button id="goToCreatePat" class="btn btn-primary mb-2 hide">Create Patient</button>
+        <div id="allPatients" class="row">
+
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="./main.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+
+</body>
+
+</html>
