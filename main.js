@@ -47,15 +47,20 @@ let allPatDiv = document.querySelector('#allPatients');
 // PATIENT CARD 
 
 function patCard(name, lastName, phone, email, id) {
-    return `<div class="card col-4" style="width: 18rem;">
-  <img src="./images/doctor2.jpg" class="logo" alt="...">
+    return `<div class="card" style="width: 18rem;">
+  <img src="./images//doctor4.jpg" class="card-img-top" alt="...">
   <div class="card-body">
-    <p class="card-title">${name}</p>
-    <p class="card-text">${lastName}</p>
-    <p class="card-text">${phone}</p>
-    <p class="card-text">${email}</p>
-    <p class="card-text">${id}</p>
-    <a href="#" class="btn btn-primary">Go somewhere</a>
+  Ime i Prezime:
+    <h5 class="card-title">${name} ${lastName}</h5>
+    <p class="card-text">id: ${id}</p>
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">Phone: ${phone}</li>
+    <li class="list-group-item">Email: ${email}</li>
+  </ul>
+  <div class="card-body">
+    <a href="#" class="card-link">Card link</a>
+    <a href="#" class="card-link">Another link</a>
   </div>
 </div>`
 }
@@ -66,16 +71,16 @@ let goToCreatePat = document.querySelector("#goToCreatePat");
 goToCreatePat.onclick = function () {
     console.log(this);
 
-    allPatDiv.classList.add("hide");
     createPatientDiv.classList.remove("hide");
-    this.className += " hide";  // sakrio si button, probaj da ga stavis u div koji ces sakriti 
-    getAllPatients();
+    allPatDiv.className += " hide";
+    this.classList.add('hide');  // sakrio si button, probaj da ga stavis u div koji ces sakriti 
+    // getAllPatients();
 
 }
 
 if (localStorage.getItem("token") != undefined) {
     containerDiv.classList.add("hide");
-    createPatientDiv.classList.add("hide");
+    createPatientDiv.className += " hide";
     goToCreatePat.classList.remove("hide");
     
     getAllPatients();
