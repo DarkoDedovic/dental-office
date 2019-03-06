@@ -68,25 +68,23 @@ function patCard(name, lastName, phone, email, id) {
 // GO TO CREATE PATIENT BUTTON
 
 let goToCreatePat = document.querySelector("#goToCreatePat");
-goToCreatePat.onclick = function (e) {
-    window.location.href = this.getAttribute('href'); // da li treba da se pravi novi fajl sa imenom hrefa ? 
-    
+goToCreatePat.addEventListener('click', function (e) {
+    changeUrl(e);
+    // history.pushState({}, "", "file:///Users/milosmetlic/Desktop/darko/dental-office/index.html/createPatient");
+    // window.location = this.getAttribute('href'); // da li treba da se pravi novi fajl sa imenom hrefa ? 
     // window.location.pathname = e.path[3].baseURI + this.getAttribute('href');
-    
-    console.log(e.path[3].baseURI + this.getAttribute('href'));
 
     createPatientDiv.classList.remove("hide");
     allPatDiv.className += " hide";
     this.classList.add('hide');
-    // getAllPatients();
 
-}
+})
 
 if (localStorage.getItem("token") != undefined) {
     containerDiv.classList.add("hide");
     createPatientDiv.className += " hide";
     goToCreatePat.classList.remove("hide");
-    
+
     getAllPatients();
 }
 
@@ -103,6 +101,30 @@ logInBtn.addEventListener('click', function (event) {
     event.preventDefault();
     logInFunction();
 });
+
+function changeUrl(e) {
+    var historyState = {};
+    var base = window.location.href;
+    console.log(base);
+
+    if (base.indexOf("#") == -1) {
+        var newPage = base + '#' + e.target.getAttribute('href');
+        window.location.href = newPage;
+    } else {
+        newPage = window.location.href.split("#")[0] + "#" + e.target.getAttribute('href');
+        console.log(newPage);
+    }
+
+
+    console.log(newPage);
+    // 
+
+    if (history && history.pushState) {
+        console.log(e.target);
+        //Only do this if history.pushState is supported by the browser
+        history.pushState(historyState, e.target.innerHTML, e.target.href)
+    }
+}
 
 function showLogin() {
     registerForm.classList.add('hide');
@@ -123,14 +145,14 @@ function getAllPatients() {
     let token = localStorage.getItem("token");
 
     fetch(`${point}patients`, {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
-        },
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
 
-    })
+        })
         .then((res) => {
 
             if (res.status == 401) {
@@ -167,32 +189,32 @@ function registerFunction(event) {
     }
 
     fetch(`${point}auth/signup`, {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            email: emailNewUser,
-            password: passNewUser,
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: emailNewUser,
+                password: passNewUser,
 
+            })
+        }).then((res) => {
+            console.log(res);
+            if (res.status == 422) {
+                return alert("Unprocessable entity. Duplicate email")
+            }
+
+            res.json();
+        }).then((data) => {
+            console.log(data);
+
+            regEmail.value = '';
+            regUserName.value = '';
+            regPassword.value = '';
+            regConfirmPassword.value = '';
+            return;
         })
-    }).then((res) => {
-        console.log(res);
-        if (res.status == 422) {
-            return alert("Unprocessable entity. Duplicate email")
-        }
-
-        res.json();
-    }).then((data) => {
-        console.log(data);
-
-        regEmail.value = '';
-        regUserName.value = '';
-        regPassword.value = '';
-        regConfirmPassword.value = '';
-        return;
-    })
         .catch((err) => {
             console.log(err.message);
 
@@ -227,16 +249,16 @@ function logInFunction() {
     }
 
     fetch(`${point}auth/signin`, {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            email: email.value,
-            password: password.value
-        })
-    }).then((res) => res.json())
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: email.value,
+                password: password.value
+            })
+        }).then((res) => res.json())
         .then((data) => {
             console.log(data);
             if (data.accessToken == undefined) {
@@ -309,7 +331,7 @@ function createPatientFun(e) {
         patientEmail.value = "";
         patientPhoneNum.value = "";
         createPatientDiv.classList.add('hide');
-        
+
         allPatDiv.classList.remove("hide");
         goToCreatePat.classList.remove("hide");
         getAllPatients();
@@ -319,6 +341,6 @@ function createPatientFun(e) {
         console.log(data);
 
     }).catch((err) => {
-            console.log(err);
-        })
+        console.log(err);
+    })
 }
