@@ -1,6 +1,13 @@
+// validirati da li je token istekao ili nije, ako jeste, prikazi LOGin stranu, ako nije - prikazi ALL PATIENTS
+//kad ima token koji nije validan, otvori i logIn i goToCreatePat stranu 
+
 const logIn = document.querySelector('#login-form-link');
 const register = document.querySelector('#register-form-link');
-const containerDiv = document.querySelector('#containerDiv');
+const logInAndRegister = document.querySelector('#logInAndRegister');
+let allSectionDivs = document.querySelectorAll("section");
+
+let baseUrl = "file:///C:/Users/HP%20EliteBook%20840%20G3/Desktop/programiranje/dental-office/index.html";
+
 
 let point = 'https://dentministrator.herokuapp.com/';
 
@@ -29,7 +36,7 @@ const signUp = document.querySelector('#signUp');
 signUp.addEventListener('click', registerFunction);
 //
 // CREATE PATIENT PAGE
-const createPatientDiv = document.querySelector('#createPatientDiv');
+const createPatient = document.querySelector('#createPatient');
 
 let patientName = document.querySelector("#patientName");
 let patientLastName = document.querySelector("#patientLastName");
@@ -41,7 +48,7 @@ const createPatBtn = document.querySelector('#createPatBtn');
 //
 
 // ALL PATIENTS DIV
-
+let patients = document.querySelector("#patients");
 let allPatDiv = document.querySelector('#allPatients');
 
 // PATIENT CARD 
@@ -52,11 +59,11 @@ function patCard(name, lastName, phone, email, id) {
   <div class="card-body">
   Ime i Prezime:
     <h5 class="card-title">${name} ${lastName}</h5>
-    <p class="card-text">id: ${id}</p>
+    <p class="card-text">${id}</p>
   </div>
   <ul class="list-group list-group-flush">
-    <li class="list-group-item">Phone: ${phone}</li>
-    <li class="list-group-item">Email: ${email}</li>
+    <li class="list-group-item">${phone}</li>
+    <li class="list-group-item">${email}</li>
   </ul>
   <div class="card-body">
     <a href="#" class="card-link">Card link</a>
@@ -68,63 +75,29 @@ function patCard(name, lastName, phone, email, id) {
 // GO TO CREATE PATIENT BUTTON
 
 let goToCreatePat = document.querySelector("#goToCreatePat");
-goToCreatePat.addEventListener('click', function (e) {
-    changeUrl(e);
-    // history.pushState({}, "", "file:///Users/milosmetlic/Desktop/darko/dental-office/index.html/createPatient");
-    // window.location = this.getAttribute('href'); // da li treba da se pravi novi fajl sa imenom hrefa ? 
-    // window.location.pathname = e.path[3].baseURI + this.getAttribute('href');
-
-    createPatientDiv.classList.remove("hide");
-    allPatDiv.className += " hide";
+goToCreatePat.onclick = function (e) {
+    e.preventDefault();
+    patients.classList.add("hide");
+    createPatient.classList.remove("hide");
     this.classList.add('hide');
+    changeUrl();
 
-})
-
-if (localStorage.getItem("token") != undefined) {
-    containerDiv.classList.add("hide");
-    createPatientDiv.className += " hide";
-    goToCreatePat.classList.remove("hide");
-
-    getAllPatients();
 }
 
-createPatBtn.addEventListener('click', function (e) {
-    createPatientFun(e)
-});
+logInBtn.onclick = function (e) {
+    e.preventDefault();
+    logInFunction();
+};
+
+createPatBtn.onclick = function (e) {
+    createPatientFun(e);
+   
+};
 
 //
 
 logIn.addEventListener('click', showLogin);
 register.addEventListener('click', showRegister);
-
-logInBtn.addEventListener('click', function (event) {
-    event.preventDefault();
-    logInFunction();
-});
-
-function changeUrl(e) {
-    var historyState = {};
-    var base = window.location.href;
-    console.log(base);
-
-    if (base.indexOf("#") == -1) {
-        var newPage = base + '#' + e.target.getAttribute('href');
-        window.location.href = newPage;
-    } else {
-        newPage = window.location.href.split("#")[0] + "#" + e.target.getAttribute('href');
-        console.log(newPage);
-    }
-
-
-    console.log(newPage);
-    // 
-
-    if (history && history.pushState) {
-        console.log(e.target);
-        //Only do this if history.pushState is supported by the browser
-        history.pushState(historyState, e.target.innerHTML, e.target.href)
-    }
-}
 
 function showLogin() {
     registerForm.classList.add('hide');
@@ -145,28 +118,26 @@ function getAllPatients() {
     let token = localStorage.getItem("token");
 
     fetch(`${point}patients`, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token
-            },
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        },
 
-        })
+    })
         .then((res) => {
 
             if (res.status == 401) {
-                containerDiv.classList.remove('hide');
+                logInAndRegister.classList.remove('hide');
                 return;
             }
             return res.json()
-        })
-        .then((data) => {
+        }).then((data) => {
             console.log(data.patients);
             let patient = '';
             data.patients.map(pat => {
                 patient += patCard(pat.firstName, pat.lastName, pat.phoneNums, pat.email, pat._id);
-                console.log(typeof patient);
                 return patient;
             })
 
@@ -189,32 +160,32 @@ function registerFunction(event) {
     }
 
     fetch(`${point}auth/signup`, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: emailNewUser,
-                password: passNewUser,
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            email: emailNewUser,
+            password: passNewUser,
 
-            })
-        }).then((res) => {
-            console.log(res);
-            if (res.status == 422) {
-                return alert("Unprocessable entity. Duplicate email")
-            }
-
-            res.json();
-        }).then((data) => {
-            console.log(data);
-
-            regEmail.value = '';
-            regUserName.value = '';
-            regPassword.value = '';
-            regConfirmPassword.value = '';
-            return;
         })
+    }).then((res) => {
+        console.log(res);
+        if (res.status == 422) {
+            return alert("Unprocessable entity. Duplicate email")
+        }
+
+        res.json();
+    }).then((data) => {
+        console.log(data);
+
+        regEmail.value = '';
+        regUserName.value = '';
+        regPassword.value = '';
+        regConfirmPassword.value = '';
+        return;
+    })
         .catch((err) => {
             console.log(err.message);
 
@@ -249,16 +220,16 @@ function logInFunction() {
     }
 
     fetch(`${point}auth/signin`, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: email.value,
-                password: password.value
-            })
-        }).then((res) => res.json())
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            email: email.value,
+            password: password.value
+        })
+    }).then((res) => res.json())
         .then((data) => {
             console.log(data);
             if (data.accessToken == undefined) {
@@ -269,15 +240,15 @@ function logInFunction() {
                 password.placeholder = data.error;
             } else {
                 localStorage.setItem('token', data.accessToken);
-                containerDiv.classList.add("hide");
-                goToCreatePat.classList.remove('hide');
+                logInAndRegister.classList.add("hide");
+                patients.classList.remove('hide');
                 getAllPatients();
-                // createPatientDiv.classList.remove("hide");
+                changeUrl();
+                
             }
             email.value = '';
             password.value = '';
-        })
-        .catch(() => console.log('*Niste ulogovani*'))
+        }).catch(() => console.log('*Niste ulogovani*'))
 }
 
 function createPatientFun(e) {
@@ -299,7 +270,6 @@ function createPatientFun(e) {
             phoneNums: [`${patientPhoneNum.value}`]
         })
     }).then((res) => {
-        console.log(res);
 
         if (res.status == 400) {
             emergencyMsg.style.color = 'red';
@@ -308,8 +278,8 @@ function createPatientFun(e) {
             // patientLastName.value = "";
             // patientEmail.value = "";
             // patientPhoneNum.value = "";
-            // createPatientDiv.classList.add('hide');
-            // containerDiv.classList.remove("hide");
+            // createPatient.classList.add('hide');
+            // logInAndRegister.classList.remove("hide");
 
             return;
         }
@@ -320,8 +290,8 @@ function createPatientFun(e) {
             // patientLastName.value = "";
             // patientEmail.value = "";
             // patientPhoneNum.value = "";
-            // createPatientDiv.classList.add('hide');
-            // containerDiv.classList.remove("hide");
+            // createPatient.classList.add('hide');
+            // logInAndRegister.classList.remove("hide");
 
             return;
         }
@@ -330,17 +300,61 @@ function createPatientFun(e) {
         patientLastName.value = "";
         patientEmail.value = "";
         patientPhoneNum.value = "";
-        createPatientDiv.classList.add('hide');
+        createPatient.classList.add('hide');
 
-        allPatDiv.classList.remove("hide");
+        patients.classList.remove("hide");
         goToCreatePat.classList.remove("hide");
         getAllPatients();
+        changeUrl();
 
         return res.json();
-    }).then(data => {
-        console.log(data);
-
     }).catch((err) => {
         console.log(err);
     })
 }
+
+
+function changeUrl() {
+    console.log(window.location);
+    
+    allSectionDivs.forEach(sectionDiv => {
+
+        if (sectionDiv.classList.contains("hide") == false) {
+            window.location.href = `${baseUrl}/${sectionDiv.id}`;
+            console.log(history);
+            // history.state = {};
+            doPushState(sectionDiv.id);
+        }
+        // window.history.pushState({}, '', `/${allSectionDivs[i].id}`);
+        // var stateObj = { url: `${baseUrl}/${allSectionDivs[i].id}` };
+
+        // window.history.pushState(stateObj, ``, `${stateObj.url}`);
+        // window.location.href = stateObj.url;
+
+    }
+    )
+}
+
+window.onload = function () {
+    console.log('darko');
+    if (localStorage.getItem("token") == undefined) {
+        logInAndRegister.classList.remove("hide");
+        changeUrl();
+
+    } else {
+        patients.classList.remove("hide");
+        getAllPatients();
+        changeUrl();
+    }
+}
+
+window.onpopstate = function(event) {
+    console.log("location: " + document.location + ", state: " + JSON.stringify(event.state));
+  };
+
+function doPushState(id) {
+    
+        history.pushState({}, '', `/${id}`);
+};
+
+

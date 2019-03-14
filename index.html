@@ -20,7 +20,7 @@
 
     <!-- CONTAINER DIV -->
 
-    <div id='containerDiv' class="container">
+    <section id='logInAndRegister' class="container hide">
         <div class="logoContainer">
             <img class="logo" src="./images/doctor.jpg" alt="">
         </div>
@@ -43,7 +43,7 @@
                 <label class="form-check-label" for="checkRemember">Remember
                     me</label>
             </div>
-            <button type="submit" class="btn btn-primary" id="logInBtn">Log
+            <button class="btn btn-primary" id="logInBtn">Log
                 In</button>
             <div>
                 <a id="forgotPass" class="forgotPassword">Forgot
@@ -81,10 +81,10 @@
             </div>
             <button id="signUp" class="btn btn-primary">Sign Up</button>
         </form>
-    </div>
+    </section>
 
     <!-- CREATE PATIENT -->
-    <div id='createPatientDiv' class="container hide">
+    <section id='createPatient' class="container hide">
         <div class="patientLogo">
             <img src="./images/doctor.jpg" id="patientImg" alt="">
         </div>
@@ -101,20 +101,20 @@
             <div class="form-group">
                 <input type="text" class="form-control" id="patientPhoneNum" placeholder="Phone num">
             </div>
-            <button id="createPatBtn" href="" class="btn btn-primary">Create Patient</button>
+            <button id="createPatBtn" class="btn btn-primary">Create Patient</button>
             <p id="emergencyMsg"></p>
         </form>
-    </div>
+    </section>
 
     <!-- ALL PATIENTS -->
 
-    <div id="createPatients" class="container">
+    <section id="patients" class="container hide">
 
-        <button id="goToCreatePat" href="patient/create" class="btn btn-primary mb-2 hide">Create Patient</button>
+        <button id="goToCreatePat" class="btn btn-primary mb-2">Create Patient</button>
         <div id="allPatients" class="row">
 
         </div>
-    </div>
+    </section>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="./main.js"></script>
