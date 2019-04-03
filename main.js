@@ -6,7 +6,10 @@ const register = document.querySelector('#register-form-link');
 const logInAndRegister = document.querySelector('#logInAndRegister');
 let allSectionDivs = document.querySelectorAll("section");
 
-let baseUrl = "file:///C:/Users/HP%20EliteBook%20840%20G3/Desktop/programiranje/dental-office/index.html";
+let baseUrl = window.location.href;
+console.log('window.location.href = ' + window.location.href);
+console.log('window.location.host = ' + window.location.host);
+console.log('window.location.origin = ' + window.location.origin);
 
 
 let point = 'https://dentministrator.herokuapp.com/';
@@ -91,7 +94,7 @@ logInBtn.onclick = function (e) {
 
 createPatBtn.onclick = function (e) {
     createPatientFun(e);
-   
+
 };
 
 //
@@ -244,7 +247,7 @@ function logInFunction() {
                 patients.classList.remove('hide');
                 getAllPatients();
                 changeUrl();
-                
+
             }
             email.value = '';
             password.value = '';
@@ -316,27 +319,21 @@ function createPatientFun(e) {
 
 function changeUrl() {
     console.log(window.location);
-    
+
     allSectionDivs.forEach(sectionDiv => {
 
         if (sectionDiv.classList.contains("hide") == false) {
-            window.location.href = `${baseUrl}/${sectionDiv.id}`;
-            console.log(history);
-            // history.state = {};
+            console.log(sectionDiv);
             doPushState(sectionDiv.id);
+
         }
-        // window.history.pushState({}, '', `/${allSectionDivs[i].id}`);
-        // var stateObj = { url: `${baseUrl}/${allSectionDivs[i].id}` };
-
-        // window.history.pushState(stateObj, ``, `${stateObj.url}`);
-        // window.location.href = stateObj.url;
-
     }
     )
 }
 
 window.onload = function () {
     console.log('darko');
+
     if (localStorage.getItem("token") == undefined) {
         logInAndRegister.classList.remove("hide");
         changeUrl();
@@ -348,13 +345,19 @@ window.onload = function () {
     }
 }
 
-window.onpopstate = function(event) {
-    console.log("location: " + document.location + ", state: " + JSON.stringify(event.state));
-  };
-
 function doPushState(id) {
-    
-        history.pushState({}, '', `/${id}`);
-};
+    console.log('darko');
+    console.log(history.state);
+    window.history.pushState({}, null, '/' + id);
 
-
+}
+window.onpopstate = function (e) {
+    console.log(e.target.location.href);
+    allSectionDivs.forEach(sectionDiv => {
+        sectionDiv.classList.add('hide');
+        if (e.target.location.href.includes(sectionDiv.id)) {
+            sectionDiv.classList.remove('hide');
+        }
+    }
+    )
+}
