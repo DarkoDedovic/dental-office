@@ -6,15 +6,16 @@ const register = document.querySelector('#register-form-link');
 const logInAndRegister = document.querySelector('#logInAndRegister');
 let allSectionDivs = document.querySelectorAll("section");
 
-let baseUrl = window.location.href;
+let baseUrl = window.location.origin;
 console.log('window.location.href = ' + window.location.href);
 console.log('window.location.host = ' + window.location.host);
 console.log('window.location.origin = ' + window.location.origin);
 
+// https://dentministrator.herokuapp.com/api/ 
 
 let point = 'https://dentministrator.herokuapp.com/';
 
-let switcher = true; // var for Log In or Register
+// let switcher = true; // var for Log In or Register
 
 
 // LOGIN FORM
@@ -57,7 +58,7 @@ let allPatDiv = document.querySelector('#allPatients');
 // PATIENT CARD 
 
 function patCard(name, lastName, phone, email, id) {
-    return `<div class="card" style="width: 18rem;">
+    return `<div class="card" id="pat${id}" style="width: 18rem;">
   <img src="./images//doctor4.jpg" class="card-img-top" alt="...">
   <div class="card-body">
   Ime i Prezime:
@@ -70,11 +71,12 @@ function patCard(name, lastName, phone, email, id) {
   </ul>
   <div class="card-body">
     <a href="#" class="card-link">Card link</a>
-    <a href="#" class="card-link">Another link</a>
+    <button class="btn btn-primary patBtn">Delete Patient</button> 
   </div>
 </div>`
 }
-
+// / onclick="deletePat(pat${id})"  ubaciti inline u button patCard componente i videti sto ne radi na taj nacin 
+// videti zasto ne radi getAllPAt() kad se uradi delete, nego tek kad se refresuje
 // GO TO CREATE PATIENT BUTTON
 
 let goToCreatePat = document.querySelector("#goToCreatePat");
@@ -117,7 +119,8 @@ function showRegister() {
     logIn.classList.remove('activeUnderline');
 }
 
-function getAllPatients() {
+function getAllPatients(e) {
+    e.preventDefault();
     let token = localStorage.getItem("token");
 
     fetch(`${point}patients`, {
@@ -136,18 +139,48 @@ function getAllPatients() {
                 return;
             }
             return res.json()
-        }).then((data) => {
-            console.log(data.patients);
-            let patient = '';
+        }).then(data => {
+
             data.patients.map(pat => {
-                patient += patCard(pat.firstName, pat.lastName, pat.phoneNums, pat.email, pat._id);
-                return patient;
-            })
+                console.log(data.patients[0]);
 
-            allPatDiv.innerHTML = patient;
-        });
+                let patients = patCard(pat.firstName, pat.lastName, pat.phoneNums, pat.email, pat._id);
 
+                let nodeDiv = document.createRange().createContextualFragment(patients);
+                console.log(pat._id);
+
+                nodeDiv.querySelector(".patBtn").addEventListener('click', function (e) { deletePat(pat._id); });
+                console.log(allPatDiv);
+
+                allPatDiv.appendChild(nodeDiv);
+
+            });
+
+            // allPatDiv.innerHTML = data.patients.map(pat => {
+
+            //     let patient = patCard(pat.firstName, pat.lastName, pat.phoneNums, pat.email, pat._id);
+            //     return patient;
+            // }).join("");
+
+        })
 }
+
+function deletePat(id) {
+
+    console.log(id);
+
+    let token = localStorage.getItem('token');
+
+    fetch(`${point}patients/${id}`, {
+        method: 'delete',
+        headers: {
+
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        }
+    }).then(data => window.location.reload())
+}
+
 
 function registerFunction(event) {
     event.preventDefault();
@@ -245,7 +278,7 @@ function logInFunction() {
                 localStorage.setItem('token', data.accessToken);
                 logInAndRegister.classList.add("hide");
                 patients.classList.remove('hide');
-                getAllPatients();
+                getAllPatients(e);
                 changeUrl();
 
             }
@@ -307,7 +340,7 @@ function createPatientFun(e) {
 
         patients.classList.remove("hide");
         goToCreatePat.classList.remove("hide");
-        getAllPatients();
+        getAllPatients(e);
         changeUrl();
 
         return res.json();
@@ -324,6 +357,7 @@ function changeUrl() {
 
         if (sectionDiv.classList.contains("hide") == false) {
             console.log(sectionDiv);
+
             doPushState(sectionDiv.id);
 
         }
@@ -331,16 +365,16 @@ function changeUrl() {
     )
 }
 
-window.onload = function () {
+window.onload = function (e) {
     console.log('darko');
-
+    console.log(history.state);
     if (localStorage.getItem("token") == undefined) {
         logInAndRegister.classList.remove("hide");
         changeUrl();
 
     } else {
         patients.classList.remove("hide");
-        getAllPatients();
+        getAllPatients(e);
         changeUrl();
     }
 }
@@ -357,6 +391,7 @@ window.onpopstate = function (e) {
         sectionDiv.classList.add('hide');
         if (e.target.location.href.includes(sectionDiv.id)) {
             sectionDiv.classList.remove('hide');
+
         }
     }
     )
