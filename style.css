@@ -96,7 +96,7 @@ form {
     
 }
 
-#allPatients {
+#allPatientsDiv {
     display: flex;
     align-items: center;
     justify-content: center;

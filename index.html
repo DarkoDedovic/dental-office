@@ -20,7 +20,7 @@
 
     <!-- CONTAINER DIV -->
 
-    <section id='logInAndRegister' class="container hide">
+    <section id='logInAndRegisterSection' class="container hide">
         <div class="logoContainer">
             <img class="logo" src="./images/doctor.jpg" alt="">
         </div>
@@ -84,36 +84,42 @@
     </section>
 
     <!-- CREATE PATIENT -->
-    <section id='createPatient' class="container hide">
+    <section id='createPatientSection' class="container hide">
         <div class="patientLogo">
             <img src="./images/doctor.jpg" id="patientImg" alt="">
         </div>
         <form action="">
             <div class="form-group">
-                <input type="text" class="form-control" id="patientName" placeholder="First Name">
+                <input type="text" class="form-control" id="patientNameInput" placeholder="First Name">
             </div>
             <div class="form-group">
-                <input type="text" class="form-control" id="patientLastName" placeholder="Last Name">
+                <input type="text" class="form-control" id="patientLastNameInput" placeholder="Last Name">
             </div>
             <div class="form-group">
-                <input type="text" class="form-control" id="patientEmail" placeholder="Email">
+                <input type="text" class="form-control" id="patientEmailInput" placeholder="Email">
             </div>
             <div class="form-group">
-                <input type="text" class="form-control" id="patientPhoneNum" placeholder="Phone num">
+                <input type="text" class="form-control" id="patientPhoneInput" placeholder="Phone">
             </div>
-            <button id="createPatBtn" class="btn btn-primary">Create Patient</button>
+            <button id="createPatientButton" class="btn btn-primary">Create Patient</button>
             <p id="emergencyMsg"></p>
         </form>
     </section>
 
     <!-- ALL PATIENTS -->
 
-    <section id="patients" class="container hide">
+    <section id="patientsSection" class="container hide">
 
-        <button id="goToCreatePat" class="btn btn-primary mb-2">Create Patient</button>
-        <div id="allPatients" class="row">
+        <button id="createPatientNavigationButton" class="btn btn-primary mb-2">Create Patient</button>
+        <div id="allPatientsDiv" class="row">
 
         </div>
+    </section>
+
+    <!-- SINGLE PATIENT CARD  -->
+
+    <section id="singleCardSection" class="container hide">
+
     </section>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

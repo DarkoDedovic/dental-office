@@ -1,25 +1,24 @@
 // validirati da li je token istekao ili nije, ako jeste, prikazi LOGin stranu, ako nije - prikazi ALL PATIENTS
-//kad ima token koji nije validan, otvori i logIn i goToCreatePat stranu 
+//kad ima token koji nije validan, otvori i logIn i createPatientNavigationButton  stranu 
 
-const logIn = document.querySelector('#login-form-link');
-const register = document.querySelector('#register-form-link');
-const logInAndRegister = document.querySelector('#logInAndRegister');
-let allSectionDivs = document.querySelectorAll("section");
+const logInAndRegisterSection = document.querySelector('#logInAndRegisterSection');
+const logInDiv = document.querySelector('#login-form-link');
+const registerDiv = document.querySelector('#register-form-link');
+const allSectionDivs = document.querySelectorAll("section");
 
-let baseUrl = window.location.origin;
+const baseUrl = window.location.origin;
 console.log('window.location.href = ' + window.location.href);
 console.log('window.location.host = ' + window.location.host);
 console.log('window.location.origin = ' + window.location.origin);
 
 // https://dentministrator.herokuapp.com/api/ 
 
-let point = 'https://dentministrator.herokuapp.com/';
+const point = 'https://dentministrator.herokuapp.com/';
 
 // let switcher = true; // var for Log In or Register
 
-
 // LOGIN FORM
-const loginForm = document.querySelector('.loginForm');
+const loginFormDiv = document.querySelector('.loginForm');
 
 const email = document.querySelector('#inputUsername');
 const password = document.querySelector('#inputPassword');
@@ -28,7 +27,7 @@ const logInBtn = document.querySelector('#logInBtn');
 const forgotPass = document.querySelector('#forgotPass');
 
 // REGISTER FORM
-const registerForm = document.querySelector('.registerForm');
+const registerFormDiv = document.querySelector('.registerForm');
 
 const regEmail = document.querySelector('#regEmail');
 const regUserName = document.querySelector('#regUserName');
@@ -40,53 +39,56 @@ const signUp = document.querySelector('#signUp');
 signUp.addEventListener('click', registerFunction);
 //
 // CREATE PATIENT PAGE
-const createPatient = document.querySelector('#createPatient');
+const createPatientSection = document.querySelector('#createPatientSection');
 
-let patientName = document.querySelector("#patientName");
-let patientLastName = document.querySelector("#patientLastName");
-let patientEmail = document.querySelector("#patientEmail");
-let patientPhoneNum = document.querySelector("#patientPhoneNum");
+const patientNameInput = document.querySelector("#patientNameInput");
+const patientLastNameInput = document.querySelector("#patientLastNameInput");
+const patientEmailInput = document.querySelector("#patientEmailInput");
+const patientPhoneInput = document.querySelector("#patientPhoneInput");
 
 const emergencyMsg = document.querySelector('#emergencyMsg');
-const createPatBtn = document.querySelector('#createPatBtn');
+const createPatientButton = document.querySelector('#createPatientButton');
 //
 
+// SINGLE PAGE DIV
+
+const singleCardSection = document.querySelector("#singleCardSection");
+
 // ALL PATIENTS DIV
-let patients = document.querySelector("#patients");
-let allPatDiv = document.querySelector('#allPatients');
+const patientsSection = document.querySelector("#patientsSection");
+const allPatientsDiv = document.querySelector('#allPatientsDiv');
 
 // PATIENT CARD 
 
-function patCard(name, lastName, phone, email, id) {
+function createPatientCards(name, lastName, phone, email, id) {
     return `<div class="card" id="pat${id}" style="width: 18rem;">
-  <img src="./images//doctor4.jpg" class="card-img-top" alt="...">
-  <div class="card-body">
-  Ime i Prezime:
-    <h5 class="card-title">${name} ${lastName}</h5>
-    <p class="card-text">${id}</p>
-  </div>
-  <ul class="list-group list-group-flush">
-    <li class="list-group-item">${phone}</li>
-    <li class="list-group-item">${email}</li>
-  </ul>
-  <div class="card-body">
-    <a href="#" class="card-link">Card link</a>
-    <button class="btn btn-primary patBtn">Delete Patient</button> 
-  </div>
-</div>`
+                <img src="./images/doctor4.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                Ime i Prezime:
+                    <h5 class="card-title">${name} ${lastName}</h5>
+                    <p class="card-text">${id}</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">${phone}</li>
+                    <li class="list-group-item">${email}</li>
+                </ul>
+                <div class="card-body">
+                    <a href="#" class="card-link">Card link</a>
+                    <button class="btn btn-primary patientButton">Delete Patient</button> 
+                </div>
+            </div>`
 }
 // / onclick="deletePat(pat${id})"  ubaciti inline u button patCard componente i videti sto ne radi na taj nacin 
 // videti zasto ne radi getAllPAt() kad se uradi delete, nego tek kad se refresuje
 // GO TO CREATE PATIENT BUTTON
 
-let goToCreatePat = document.querySelector("#goToCreatePat");
-goToCreatePat.onclick = function (e) {
+const createPatientNavigationButton = document.querySelector("#createPatientNavigationButton");
+createPatientNavigationButton.onclick = function (e) {
     e.preventDefault();
-    patients.classList.add("hide");
-    createPatient.classList.remove("hide");
+    patientsSection.classList.add("hide");
+    createPatientSection.classList.remove("hide");
     this.classList.add('hide');
     changeUrl();
-
 }
 
 logInBtn.onclick = function (e) {
@@ -94,34 +96,35 @@ logInBtn.onclick = function (e) {
     logInFunction();
 };
 
-createPatBtn.onclick = function (e) {
+createPatientButton.onclick = function (e) {
     createPatientFun(e);
-
 };
 
 //
 
-logIn.addEventListener('click', showLogin);
-register.addEventListener('click', showRegister);
+logInDiv.addEventListener('click', showLogin);
+registerDiv.addEventListener('click', showRegister);
 
 function showLogin() {
-    registerForm.classList.add('hide');
-    loginForm.classList.remove('hide');
-    logIn.classList.add('activeUnderline');
-    register.classList.remove('activeUnderline');
+    registerFormDiv.classList.add('hide');
+    loginFormDiv.classList.remove('hide');
+    logInDiv.classList.add('activeUnderline');
+    registerDiv.classList.remove('activeUnderline');
     console.log();
 }
 
 function showRegister() {
-    loginForm.classList.add('hide');
-    registerForm.classList.remove('hide');
-    register.classList.add('activeUnderline');
-    logIn.classList.remove('activeUnderline');
+    loginFormDiv.classList.add('hide');
+    registerFormDiv.classList.remove('hide');
+    registerDiv.classList.add('activeUnderline');
+    logInDiv.classList.remove('activeUnderline');
 }
 
-function getAllPatients(e) {
-    e.preventDefault();
-    let token = localStorage.getItem("token");
+function getAllPatients() {
+
+    console.log('11111111');
+
+    const token = localStorage.getItem("token");
 
     fetch(`${point}patients`, {
         method: 'GET',
@@ -135,34 +138,69 @@ function getAllPatients(e) {
         .then((res) => {
 
             if (res.status == 401) {
-                logInAndRegister.classList.remove('hide');
+                logInAndRegisterSection.classList.remove('hide');
                 return;
             }
             return res.json()
         }).then(data => {
 
             data.patients.map(pat => {
-                console.log(data.patients[0]);
+                console.log('222222');
+                const patients = createPatientCards(pat.firstName, pat.lastName, pat.phoneNums, pat.email, pat._id);
 
-                let patients = patCard(pat.firstName, pat.lastName, pat.phoneNums, pat.email, pat._id);
+                const nodeDiv = document.createRange().createContextualFragment(patients);
+                nodeDiv.querySelector(".card").addEventListener('click', event => {
+                    openSingleCard(pat.firstName, pat.lastName, pat.phoneNums, pat.email, pat._id)
+                });
 
-                let nodeDiv = document.createRange().createContextualFragment(patients);
-                console.log(pat._id);
+                nodeDiv.querySelector(".patientButton").addEventListener('click', (e) => {
+                    deletePat(pat._id);
+                    e.stopPropagation();
+                });
 
-                nodeDiv.querySelector(".patBtn").addEventListener('click', function (e) { deletePat(pat._id); });
-                console.log(allPatDiv);
-
-                allPatDiv.appendChild(nodeDiv);
+                allPatientsDiv.appendChild(nodeDiv);
 
             });
 
-            // allPatDiv.innerHTML = data.patients.map(pat => {
+            // allPatientsDiv.innerHTML = data.patients.map(pat => {
 
-            //     let patient = patCard(pat.firstName, pat.lastName, pat.phoneNums, pat.email, pat._id);
+            //     let patient = createPatientCards(pat.firstName, pat.lastName, pat.phoneNums, pat.email, pat._id);
             //     return patient;
             // }).join("");
 
         })
+}
+
+function openSingleCard(name, lastName, phone, email, id) {
+    console.log(id);
+    singleCardSection.removeChild(singleCardSection.childNodes[0]);
+    allSectionDivs.forEach(sectionDiv => {
+        sectionDiv.classList.add('hide');
+
+        if (sectionDiv.id == 'singleCardSection') {
+            sectionDiv.classList.remove("hide");
+        }
+    })
+
+    const singlePatientCard = `<div class="card" id="pat${id}" style="width: 18rem;">
+                                <img src="./images/doctor4.jpg" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                Ime i Prezime:
+                                    <h5 class="card-title">${name} ${lastName}</h5>
+                                    <p class="card-text">${id}</p>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">${phone}</li>
+                                    <li class="list-group-item">${email}</li>
+                                </ul>
+                                <div class="card-body">
+                                    <a href="#" class="card-link">Card link</a>
+                                    <button class="btn btn-primary edit">Edit</button> 
+                                </div>
+                            </div>`
+    const nodeCard = document.createRange().createContextualFragment(singlePatientCard);
+    singleCardSection.appendChild(nodeCard);
+    changeUrl();
 }
 
 function deletePat(id) {
@@ -276,9 +314,9 @@ function logInFunction() {
                 password.placeholder = data.error;
             } else {
                 localStorage.setItem('token', data.accessToken);
-                logInAndRegister.classList.add("hide");
-                patients.classList.remove('hide');
-                getAllPatients(e);
+                logInAndRegisterSection.classList.add("hide");
+                patientsSection.classList.remove('hide');
+                getAllPatients();
                 changeUrl();
 
             }
@@ -300,47 +338,47 @@ function createPatientFun(e) {
             'Authorization': 'Bearer ' + token
         },
         body: JSON.stringify({
-            firstName: patientName.value,
-            lastName: patientLastName.value,
-            email: patientEmail.value,
-            phoneNums: [`${patientPhoneNum.value}`]
+            firstName: patientNameInput.value,
+            lastName: patientLastNameInput.value,
+            email: patientEmailInput.value,
+            phoneNums: [`${patientPhoneInput.value}`]
         })
     }).then((res) => {
 
         if (res.status == 400) {
             emergencyMsg.style.color = 'red';
             emergencyMsg.textContent = 'Unesite ispravno podatke!';
-            // patientName.value = "";
-            // patientLastName.value = "";
-            // patientEmail.value = "";
-            // patientPhoneNum.value = "";
-            // createPatient.classList.add('hide');
-            // logInAndRegister.classList.remove("hide");
+            // patientNameInput.value = "";
+            // patientLastNameInput.value = "";
+            // patientEmailInput.value = "";
+            // patientPhoneInput.value = "";
+            // createPatientSection.classList.add('hide');
+            // logInAndRegisterSection.classList.remove("hide");
 
             return;
         }
         if (res.status == 500) {
             emergencyMsg.style.color = 'red';
             emergencyMsg.textContent = 'Mail je vec u upotrebi';
-            // patientName.value = "";
-            // patientLastName.value = "";
-            // patientEmail.value = "";
-            // patientPhoneNum.value = "";
-            // createPatient.classList.add('hide');
-            // logInAndRegister.classList.remove("hide");
+            // patientNameInput.value = "";
+            // patientLastNameInput.value = "";
+            // patientEmailInput.value = "";
+            // patientPhoneInput.value = "";
+            // createPatientSection.classList.add('hide');
+            // logInAndRegisterSection.classList.remove("hide");
 
             return;
         }
 
-        patientName.value = "";
-        patientLastName.value = "";
-        patientEmail.value = "";
-        patientPhoneNum.value = "";
-        createPatient.classList.add('hide');
+        patientNameInput.value = "";
+        patientLastNameInput.value = "";
+        patientEmailInput.value = "";
+        patientPhoneInput.value = "";
+        createPatientSection.classList.add('hide');
 
-        patients.classList.remove("hide");
-        goToCreatePat.classList.remove("hide");
-        getAllPatients(e);
+        patientsSection.classList.remove("hide");
+        createPatientNavigationButton.classList.remove("hide");
+        getAllPatients();
         changeUrl();
 
         return res.json();
@@ -369,12 +407,12 @@ window.onload = function (e) {
     console.log('darko');
     console.log(history.state);
     if (localStorage.getItem("token") == undefined) {
-        logInAndRegister.classList.remove("hide");
+        logInAndRegisterSection.classList.remove("hide");
         changeUrl();
 
     } else {
-        patients.classList.remove("hide");
-        getAllPatients(e);
+        patientsSection.classList.remove("hide");
+        getAllPatients();
         changeUrl();
     }
 }
@@ -385,6 +423,7 @@ function doPushState(id) {
     window.history.pushState({}, null, '/' + id);
 
 }
+
 window.onpopstate = function (e) {
     console.log(e.target.location.href);
     allSectionDivs.forEach(sectionDiv => {
