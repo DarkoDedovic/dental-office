@@ -15,8 +15,6 @@ console.log('window.location.origin = ' + window.location.origin);
 
 const point = 'https://dentministrator.herokuapp.com/';
 
-// let switcher = true; // var for Log In or Register
-
 // LOGIN FORM
 const loginFormDiv = document.querySelector('.loginForm');
 
@@ -78,8 +76,8 @@ function createPatientCards(name, lastName, phone, email, id) {
                 </div>
             </div>`
 }
-// / onclick="deletePat(pat${id})"  ubaciti inline u button patCard componente i videti sto ne radi na taj nacin 
-// videti zasto ne radi getAllPAt() kad se uradi delete, nego tek kad se refresuje
+// / onclick="deletePatient(pat${id})"  ubaciti inline u button patCard componente i videti sto ne radi na taj nacin 
+
 // GO TO CREATE PATIENT BUTTON
 
 const createPatientNavigationButton = document.querySelector("#createPatientNavigationButton");
@@ -97,10 +95,8 @@ logInBtn.onclick = function (e) {
 };
 
 createPatientButton.onclick = function (e) {
-    createPatientFun(e);
+    createPatientFunction(e);
 };
-
-//
 
 logInDiv.addEventListener('click', showLogin);
 registerDiv.addEventListener('click', showRegister);
@@ -110,7 +106,6 @@ function showLogin() {
     loginFormDiv.classList.remove('hide');
     logInDiv.classList.add('activeUnderline');
     registerDiv.classList.remove('activeUnderline');
-    console.log();
 }
 
 function showRegister() {
@@ -122,8 +117,6 @@ function showRegister() {
 
 function getAllPatients() {
 
-    console.log('11111111');
-
     const token = localStorage.getItem("token");
 
     fetch(`${point}patients`, {
@@ -134,41 +127,41 @@ function getAllPatients() {
             'Authorization': 'Bearer ' + token
         },
 
-    })
-        .then((res) => {
+    }).then((res) => {
 
-            if (res.status == 401) {
-                logInAndRegisterSection.classList.remove('hide');
-                return;
-            }
-            return res.json()
-        }).then(data => {
+        if (res.status == 401) {
+            logInAndRegisterSection.classList.remove('hide');
+            return;
+        }
+        return res.json()
+    }).then(data => {
 
-            data.patients.map(pat => {
-                console.log('222222');
-                const patients = createPatientCards(pat.firstName, pat.lastName, pat.phoneNums, pat.email, pat._id);
+        data.patients.map(pat => {
 
-                const nodeDiv = document.createRange().createContextualFragment(patients);
-                nodeDiv.querySelector(".card").addEventListener('click', event => {
-                    openSingleCard(pat.firstName, pat.lastName, pat.phoneNums, pat.email, pat._id)
-                });
+            const patients = createPatientCards(pat.firstName, pat.lastName, pat.phoneNums, pat.email, pat._id);
+            // create node of string 'patients'
+            const nodeDiv = document.createRange().createContextualFragment(patients);
 
-                nodeDiv.querySelector(".patientButton").addEventListener('click', (e) => {
-                    deletePat(pat._id);
-                    e.stopPropagation();
-                });
-
-                allPatientsDiv.appendChild(nodeDiv);
-
+            nodeDiv.querySelector(".card").addEventListener('click', event => {
+                openSingleCard(pat.firstName, pat.lastName, pat.phoneNums, pat.email, pat._id)
             });
 
-            // allPatientsDiv.innerHTML = data.patients.map(pat => {
+            nodeDiv.querySelector(".patientButton").addEventListener('click', event => {
+                deletePatient(pat._id);
+                event.stopPropagation();
+            });
 
-            //     let patient = createPatientCards(pat.firstName, pat.lastName, pat.phoneNums, pat.email, pat._id);
-            //     return patient;
-            // }).join("");
+            allPatientsDiv.appendChild(nodeDiv);
 
-        })
+        });
+
+        // allPatientsDiv.innerHTML = data.patients.map(pat => {
+
+        //     let patient = createPatientCards(pat.firstName, pat.lastName, pat.phoneNums, pat.email, pat._id);
+        //     return patient;
+        // }).join("");
+
+    })
 }
 
 function openSingleCard(name, lastName, phone, email, id) {
@@ -183,31 +176,30 @@ function openSingleCard(name, lastName, phone, email, id) {
     })
 
     const singlePatientCard = `<div class="card" id="pat${id}" style="width: 18rem;">
-                                <img src="./images/doctor4.jpg" class="card-img-top" alt="...">
-                                <div class="card-body">
-                                Ime i Prezime:
-                                    <h5 class="card-title">${name} ${lastName}</h5>
-                                    <p class="card-text">${id}</p>
-                                </div>
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item">${phone}</li>
-                                    <li class="list-group-item">${email}</li>
-                                </ul>
-                                <div class="card-body">
-                                    <a href="#" class="card-link">Card link</a>
-                                    <button class="btn btn-primary edit">Edit</button> 
-                                </div>
-                            </div>`
+                                    <img src="./images/doctor4.jpg" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                    Ime i Prezime:
+                                        <h5 class="card-title">${name} ${lastName}</h5>
+                                        <p class="card-text">${id}</p>
+                                    </div>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item">${phone}</li>
+                                        <li class="list-group-item">${email}</li>
+                                    </ul>
+                                    <div class="card-body">
+                                        <a href="#" class="card-link">Card link</a>
+                                        <button class="btn btn-primary edit">Edit</button> 
+                                    </div>
+                              </div>`
+    // create node of string 'patients'
     const nodeCard = document.createRange().createContextualFragment(singlePatientCard);
     singleCardSection.appendChild(nodeCard);
     changeUrl();
 }
 
-function deletePat(id) {
+function deletePatient(id) {
 
-    console.log(id);
-
-    let token = localStorage.getItem('token');
+    const token = localStorage.getItem('token');
 
     fetch(`${point}patients/${id}`, {
         method: 'delete',
@@ -216,18 +208,18 @@ function deletePat(id) {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + token
         }
-    }).then(data => window.location.reload())
+    }).then(() => window.location.reload())
 }
 
 
 function registerFunction(event) {
     event.preventDefault();
 
-    let emailNewUser = regEmail.value;
-    let userNameNewUser = regUserName.value;
+    const emailNewUser = regEmail.value;
+    const userNameNewUser = regUserName.value;
 
-    let passNewUser = regPassword.value;
-    let confPassNewUser = regConfirmPassword.value;
+    const passNewUser = regPassword.value;
+    const confPassNewUser = regConfirmPassword.value;
 
     if (validate(regEmail, regUserName, regPassword, regConfirmPassword)) {
         return;
@@ -252,18 +244,14 @@ function registerFunction(event) {
 
         res.json();
     }).then((data) => {
-        console.log(data);
-
         regEmail.value = '';
         regUserName.value = '';
         regPassword.value = '';
         regConfirmPassword.value = '';
         return;
+    }).catch((err) => {
+        console.log(err.message);
     })
-        .catch((err) => {
-            console.log(err.message);
-
-        })
 }
 
 function validate(regEmail, regUserName, regPassword, regConfirmPassword) {
@@ -303,8 +291,9 @@ function logInFunction() {
             email: email.value,
             password: password.value
         })
-    }).then((res) => res.json())
-        .then((data) => {
+    }).then(res => res.json())
+
+        .then(data => {
             console.log(data);
             if (data.accessToken == undefined) {
                 console.log(data.error);
@@ -325,10 +314,10 @@ function logInFunction() {
         }).catch(() => console.log('*Niste ulogovani*'))
 }
 
-function createPatientFun(e) {
-    e.preventDefault();
+function createPatientFunction(event) {
+    event.preventDefault();
     emergencyMsg.textContent = '';
-    let token = localStorage.getItem('token');
+    const token = localStorage.getItem('token');
 
     fetch(`${point}patients`, {
         method: 'POST',
@@ -343,7 +332,7 @@ function createPatientFun(e) {
             email: patientEmailInput.value,
             phoneNums: [`${patientPhoneInput.value}`]
         })
-    }).then((res) => {
+    }).then(res => {
 
         if (res.status == 400) {
             emergencyMsg.style.color = 'red';
@@ -389,18 +378,13 @@ function createPatientFun(e) {
 
 
 function changeUrl() {
-    console.log(window.location);
 
     allSectionDivs.forEach(sectionDiv => {
 
         if (sectionDiv.classList.contains("hide") == false) {
-            console.log(sectionDiv);
-
             doPushState(sectionDiv.id);
-
         }
-    }
-    )
+    })
 }
 
 window.onload = function (e) {
@@ -430,8 +414,6 @@ window.onpopstate = function (e) {
         sectionDiv.classList.add('hide');
         if (e.target.location.href.includes(sectionDiv.id)) {
             sectionDiv.classList.remove('hide');
-
         }
-    }
-    )
+    })
 }
