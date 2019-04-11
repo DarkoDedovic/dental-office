@@ -12,6 +12,9 @@ const baseUrl = window.location.origin;
 
 const point = 'https://dentministrator.herokuapp.com/';
 const ENDPOINT_PATIENTS = `${point}patients`;
+const ENDPOINT_SIGN_IN = `${point}auth/signin`;
+const ENDPOINT_SIGN_UP = `${point}auth/signup`;
+const ENDPOINT_DELETE = `${point}patients/`;
 
 // LOGIN FORM
 const loginFormDiv = document.querySelector('.loginForm');
@@ -177,59 +180,40 @@ function openSingleCard(name, lastName, phone, email, id) {
 
 function deletePatient(id) {
 
-    const token = localStorage.getItem('token');
+    httpDelete(`${ENDPOINT_DELETE}${id}`, true)
 
-    fetch(`${point}patients/${id}`, {
-        method: 'delete',
-        headers: {
-
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
-        }
-    }).then(() => window.location.reload())
+        .then(() => window.location.reload())
 }
 
+function getDataFromRegInputs() {
+    const inputsForRegister = {
+        email: regEmail.value,
+        password: regPassword.value,
+        userNameNewUser: regUserName.value,
+        confirmPasswordNewUser: regConfirmPassword.value
+    }
+    return JSON.stringify(inputsForRegister)
+}
+
+function resetRegisterInputs() {
+    regEmail.value = '';
+    regUserName.value = '';
+    regPassword.value = '';
+    regConfirmPassword.value = '';
+}
 
 function registerFunction(event) {
     event.preventDefault();
-
-    const emailNewUser = regEmail.value;
-    const userNameNewUser = regUserName.value;
-
-    const passNewUser = regPassword.value;
-    const confPassNewUser = regConfirmPassword.value;
-
     if (validate(regEmail, regUserName, regPassword, regConfirmPassword)) {
         return;
     }
-
-    fetch(`${point}auth/signup`, {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            email: emailNewUser,
-            password: passNewUser,
-
+    httpPost(ENDPOINT_SIGN_UP, false, getDataFromRegInputs())
+        .then(() => {
+            resetRegisterInputs();
+            return;
+        }).catch(data => {
+            alert(data);
         })
-    }).then((res) => {
-        console.log(res);
-        if (res.status == 422) {
-            return alert("Unprocessable entity. Duplicate email")
-        }
-
-        res.json();
-    }).then((data) => {
-        regEmail.value = '';
-        regUserName.value = '';
-        regPassword.value = '';
-        regConfirmPassword.value = '';
-        return;
-    }).catch((err) => {
-        console.log(err.message);
-    })
 }
 
 function validate(regEmail, regUserName, regPassword, regConfirmPassword) {
@@ -253,28 +237,30 @@ function validate(regEmail, regUserName, regPassword, regConfirmPassword) {
     return validation;
 }
 
+function getLogInData() {
+    const inputsForLogIn = {
+        email: email.value,
+        password: password.value
+    }
+    return JSON.stringify(inputsForLogIn);
+}
+
+function resetLogInInputs() {
+    email.value = '';
+    password.value = '';
+}
+
 function logInFunction() {
 
     if (validate(email, password)) {
         return;
     }
 
-    fetch(`${point}auth/signin`, {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            email: email.value,
-            password: password.value
-        })
-    }).then(res => res.json())
-
+    httpPost(ENDPOINT_SIGN_IN, false, getLogInData())
+        // da li ovo obrisati ispod i greske hvatati samo u sendData funkciji ???
         .then(data => {
-            console.log(data);
             if (data.accessToken == undefined) {
-                console.log(data.error);
+                resetLogInInputs();
                 email.style.backgroundColor = 'red';
                 password.style.backgroundColor = 'red';
                 email.placeholder = data.error;
@@ -287,9 +273,8 @@ function logInFunction() {
                 changeUrl();
 
             }
-            email.value = '';
-            password.value = '';
-        }).catch(() => console.log('*Niste ulogovani*'))
+
+        }).catch(data => console.log(data))
 }
 
 function getCreatePatientData() {
@@ -299,9 +284,6 @@ function getCreatePatientData() {
         email: patientEmailInput.value,
         phoneNums: [`${patientPhoneInput.value}`]
     };
-
-    console.log('inputsForCreatePatient', inputsForCreatePatient);
-
     return JSON.stringify(inputsForCreatePatient);
 }
 
@@ -311,7 +293,6 @@ function resetUI() {
     patientEmailInput.value = "";
     patientPhoneInput.value = "";
     createPatientSection.classList.add('hide');
-
     patientsSection.classList.remove("hide");
     createPatientNavigationButton.classList.remove("hide");
 }
@@ -325,8 +306,7 @@ function createPatientFunction(event) {
             resetUI();
             getAllPatients();
             changeUrl();
-        }
-        ).catch((err) => {
+        }).catch((err) => {
             console.log(err);
             emergencyMsg.style.color = 'red';
             emergencyMsg.textContent = 'Unesite ispravno podatke!';
@@ -371,7 +351,7 @@ window.onpopstate = function (event) {
     })
 }
 
-function sentData(url, method, isAuth, body) {
+function sendData(url, method, isAuth, body) {
 
     const params = {
         method: method,
@@ -386,10 +366,12 @@ function sentData(url, method, isAuth, body) {
     }
 
     if (isAuth) {
-        params.headers['Authorization'] = 'Bearer ' + localStorage.getItem('token');;
+        params.headers['Authorization'] = 'Bearer ' + localStorage.getItem('token');
     }
 
+    // proveriti gde izbacuje gresku promise.rejected()
     return fetch(url, params).then(res => {
+
         if (res.status == 400) {
             return Promise.reject('invalid data')
         }
@@ -397,19 +379,24 @@ function sentData(url, method, isAuth, body) {
             logInAndRegisterSection.classList.remove('hide');
             return Promise.reject('invalid data')
         }
+        if (res.status == 422) {
+            return Promise.reject('Unprocessable entity. Duplicate entry.');
+        }
         if (res.status == 500) {
             return Promise.reject('server error');
         }
-
         return res.json();
-    }
-    );
+    });
 }
 
 function httpPost(url, isAuth, body) {
-    return sentData(url, 'POST', isAuth, body);
+    return sendData(url, 'POST', isAuth, body);
 }
 
 function httpGet(url, isAuth) {
-    return sentData(url, 'GET', isAuth);
+    return sendData(url, 'GET', isAuth);
+}
+
+function httpDelete(url, isAuth) {
+    return sendData(url, 'DELETE', isAuth);
 }
