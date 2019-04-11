@@ -7,13 +7,11 @@ const registerDiv = document.querySelector('#register-form-link');
 const allSectionDivs = document.querySelectorAll("section");
 
 const baseUrl = window.location.origin;
-console.log('window.location.href = ' + window.location.href);
-console.log('window.location.host = ' + window.location.host);
-console.log('window.location.origin = ' + window.location.origin);
 
 // https://dentministrator.herokuapp.com/api/ 
 
 const point = 'https://dentministrator.herokuapp.com/';
+const ENDPOINT_PATIENTS = `${point}patients`;
 
 // LOGIN FORM
 const loginFormDiv = document.querySelector('.loginForm');
@@ -35,8 +33,9 @@ const gridCheck = document.querySelector('#gridCheck');
 const signUp = document.querySelector('#signUp');
 
 signUp.addEventListener('click', registerFunction);
-//
+
 // CREATE PATIENT PAGE
+
 const createPatientSection = document.querySelector('#createPatientSection');
 
 const patientNameInput = document.querySelector("#patientNameInput");
@@ -46,7 +45,6 @@ const patientPhoneInput = document.querySelector("#patientPhoneInput");
 
 const emergencyMsg = document.querySelector('#emergencyMsg');
 const createPatientButton = document.querySelector('#createPatientButton');
-//
 
 // SINGLE PAGE DIV
 
@@ -76,7 +74,6 @@ function createPatientCards(name, lastName, phone, email, id) {
                 </div>
             </div>`
 }
-// / onclick="deletePatient(pat${id})"  ubaciti inline u button patCard componente i videti sto ne radi na taj nacin 
 
 // GO TO CREATE PATIENT BUTTON
 
@@ -116,56 +113,37 @@ function showRegister() {
 }
 
 function getAllPatients() {
-
+    while (allPatientsDiv.firstChild) {
+        allPatientsDiv.firstChild.remove();
+    }
     const token = localStorage.getItem("token");
 
-    fetch(`${point}patients`, {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
-        },
+    httpGet(ENDPOINT_PATIENTS, true)
 
-    }).then((res) => {
+        .then(data => {
 
-        if (res.status == 401) {
-            logInAndRegisterSection.classList.remove('hide');
-            return;
-        }
-        return res.json()
-    }).then(data => {
+            data.patients.map(pat => {
 
-        data.patients.map(pat => {
+                const patients = createPatientCards(pat.firstName, pat.lastName, pat.phoneNums, pat.email, pat._id);
+                // create node of string 'patients'
+                const nodeDiv = document.createRange().createContextualFragment(patients);
 
-            const patients = createPatientCards(pat.firstName, pat.lastName, pat.phoneNums, pat.email, pat._id);
-            // create node of string 'patients'
-            const nodeDiv = document.createRange().createContextualFragment(patients);
+                nodeDiv.querySelector(".card").addEventListener('click', event => {
+                    openSingleCard(pat.firstName, pat.lastName, pat.phoneNums, pat.email, pat._id)
+                });
 
-            nodeDiv.querySelector(".card").addEventListener('click', event => {
-                openSingleCard(pat.firstName, pat.lastName, pat.phoneNums, pat.email, pat._id)
+                nodeDiv.querySelector(".patientButton").addEventListener('click', event => {
+                    deletePatient(pat._id);
+                    event.stopPropagation();
+                });
+
+                allPatientsDiv.appendChild(nodeDiv);
+
             });
-
-            nodeDiv.querySelector(".patientButton").addEventListener('click', event => {
-                deletePatient(pat._id);
-                event.stopPropagation();
-            });
-
-            allPatientsDiv.appendChild(nodeDiv);
-
-        });
-
-        // allPatientsDiv.innerHTML = data.patients.map(pat => {
-
-        //     let patient = createPatientCards(pat.firstName, pat.lastName, pat.phoneNums, pat.email, pat._id);
-        //     return patient;
-        // }).join("");
-
-    })
+        })
 }
 
 function openSingleCard(name, lastName, phone, email, id) {
-    console.log(id);
     singleCardSection.removeChild(singleCardSection.childNodes[0]);
     allSectionDivs.forEach(sectionDiv => {
         sectionDiv.classList.add('hide');
@@ -314,66 +292,47 @@ function logInFunction() {
         }).catch(() => console.log('*Niste ulogovani*'))
 }
 
+function getCreatePatientData() {
+    const inputsForCreatePatient = {
+        firstName: patientNameInput.value,
+        lastName: patientLastNameInput.value,
+        email: patientEmailInput.value,
+        phoneNums: [`${patientPhoneInput.value}`]
+    };
+
+    console.log('inputsForCreatePatient', inputsForCreatePatient);
+
+    return JSON.stringify(inputsForCreatePatient);
+}
+
+function resetUI() {
+    patientNameInput.value = "";
+    patientLastNameInput.value = "";
+    patientEmailInput.value = "";
+    patientPhoneInput.value = "";
+    createPatientSection.classList.add('hide');
+
+    patientsSection.classList.remove("hide");
+    createPatientNavigationButton.classList.remove("hide");
+}
+
 function createPatientFunction(event) {
     event.preventDefault();
     emergencyMsg.textContent = '';
-    const token = localStorage.getItem('token');
 
-    fetch(`${point}patients`, {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
-        },
-        body: JSON.stringify({
-            firstName: patientNameInput.value,
-            lastName: patientLastNameInput.value,
-            email: patientEmailInput.value,
-            phoneNums: [`${patientPhoneInput.value}`]
-        })
-    }).then(res => {
-
-        if (res.status == 400) {
+    httpPost(ENDPOINT_PATIENTS, true, getCreatePatientData())
+        .then(data => {
+            resetUI();
+            getAllPatients();
+            changeUrl();
+        }
+        ).catch((err) => {
+            console.log(err);
             emergencyMsg.style.color = 'red';
             emergencyMsg.textContent = 'Unesite ispravno podatke!';
-            // patientNameInput.value = "";
-            // patientLastNameInput.value = "";
-            // patientEmailInput.value = "";
-            // patientPhoneInput.value = "";
-            // createPatientSection.classList.add('hide');
-            // logInAndRegisterSection.classList.remove("hide");
-
-            return;
-        }
-        if (res.status == 500) {
             emergencyMsg.style.color = 'red';
             emergencyMsg.textContent = 'Mail je vec u upotrebi';
-            // patientNameInput.value = "";
-            // patientLastNameInput.value = "";
-            // patientEmailInput.value = "";
-            // patientPhoneInput.value = "";
-            // createPatientSection.classList.add('hide');
-            // logInAndRegisterSection.classList.remove("hide");
-
-            return;
-        }
-
-        patientNameInput.value = "";
-        patientLastNameInput.value = "";
-        patientEmailInput.value = "";
-        patientPhoneInput.value = "";
-        createPatientSection.classList.add('hide');
-
-        patientsSection.classList.remove("hide");
-        createPatientNavigationButton.classList.remove("hide");
-        getAllPatients();
-        changeUrl();
-
-        return res.json();
-    }).catch((err) => {
-        console.log(err);
-    })
+        })
 }
 
 
@@ -388,8 +347,6 @@ function changeUrl() {
 }
 
 window.onload = function (e) {
-    console.log('darko');
-    console.log(history.state);
     if (localStorage.getItem("token") == undefined) {
         logInAndRegisterSection.classList.remove("hide");
         changeUrl();
@@ -402,18 +359,57 @@ window.onload = function (e) {
 }
 
 function doPushState(id) {
-    console.log('darko');
-    console.log(history.state);
     window.history.pushState({}, null, '/' + id);
-
 }
 
-window.onpopstate = function (e) {
-    console.log(e.target.location.href);
+window.onpopstate = function (event) {
     allSectionDivs.forEach(sectionDiv => {
         sectionDiv.classList.add('hide');
-        if (e.target.location.href.includes(sectionDiv.id)) {
+        if (event.target.location.href.includes(sectionDiv.id)) {
             sectionDiv.classList.remove('hide');
         }
     })
+}
+
+function sentData(url, method, isAuth, body) {
+
+    const params = {
+        method: method,
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    }
+
+    if (body) {
+        params.body = body;
+    }
+
+    if (isAuth) {
+        params.headers['Authorization'] = 'Bearer ' + localStorage.getItem('token');;
+    }
+
+    return fetch(url, params).then(res => {
+        if (res.status == 400) {
+            return Promise.reject('invalid data')
+        }
+        if (res.status == 401) {
+            logInAndRegisterSection.classList.remove('hide');
+            return Promise.reject('invalid data')
+        }
+        if (res.status == 500) {
+            return Promise.reject('server error');
+        }
+
+        return res.json();
+    }
+    );
+}
+
+function httpPost(url, isAuth, body) {
+    return sentData(url, 'POST', isAuth, body);
+}
+
+function httpGet(url, isAuth) {
+    return sentData(url, 'GET', isAuth);
 }
