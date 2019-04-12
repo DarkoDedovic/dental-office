@@ -65,7 +65,9 @@ const createPatientNavigationButton = document.querySelector("#createPatientNavi
 
 
 window.onload = function (e) {
-    if (localStorage.getItem("token") == undefined) {
+    console.log();
+    
+    if (JSON.parse(localStorage.getItem("token")) == undefined) {
         logInAndRegisterSection.classList.remove("hide");
         changeUrl();
 

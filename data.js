@@ -25,7 +25,7 @@ function sendData(url, method, isAuth, body) {
     }
 
     if (isAuth) {
-        params.headers['Authorization'] = 'Bearer ' + localStorage.getItem('token');
+        params.headers['Authorization'] = 'Bearer ' + JSON.parse(localStorage.getItem('token')).accessToken;
     }
 
     // proveriti gde izbacuje gresku promise.rejected()
@@ -75,6 +75,8 @@ function logInFunction() {
     httpPost(ENDPOINT_SIGN_IN, false, getLogInData())
         // da li ovo obrisati ispod i greske hvatati samo u sendData funkciji ???
         .then(data => {
+            console.log(data);
+            
             if (data.accessToken == undefined) {
                 resetLogInInputs();
                 email.style.backgroundColor = 'red';
@@ -82,7 +84,7 @@ function logInFunction() {
                 email.placeholder = data.error;
                 password.placeholder = data.error;
             } else {
-                localStorage.setItem('token', data.accessToken);
+                localStorage.setItem('token', JSON.stringify(data));
                 logInAndRegisterSection.classList.add("hide");
                 patientsSection.classList.remove('hide');
                 getAllPatients();
@@ -116,7 +118,9 @@ function getAllPatients() {
     while (allPatientsDiv.firstChild) {
         allPatientsDiv.firstChild.remove();
     }
-    const token = localStorage.getItem("token");
+    const token = JSON.parse(localStorage.getItem('token')).accessToken;
+    console.log(token);
+    
 
     httpGet(ENDPOINT_PATIENTS, true)
 
