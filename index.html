@@ -29,7 +29,7 @@
             <div><a class="" id="register-form-link">Register</a></div>
         </div>
         <!-- LOGIN -->
-        <form class="loginForm shadow-none p-3 mb-5 bg-light rounded">
+        <form id="logInFormDiv" class="loginForm shadow-none p-3 mb-5 bg-light rounded">
             <div class="form-group">
                 <label for="inputUsername">Email</label>
                 <input type="email" class="form-control" id="inputUsername" placeholder="Email">
@@ -43,6 +43,7 @@
                 <label class="form-check-label" for="checkRemember">Remember
                     me</label>
             </div>
+            <p id="logInErrorMsg"></p>
             <button class="btn btn-primary" id="logInBtn">Log
                 In</button>
             <div>
@@ -52,7 +53,7 @@
         </form>
 
         <!-- REGISTER -->
-        <form class="registerForm shadow-none p-3 mb-5 bg-light hide">
+        <form id="registerFormDiv" class="registerForm shadow-none p-3 mb-5 bg-light hide">
             <div class="form-row">
                 <div class="form-group col-md-12 required">
                     <label for="regEmail">Email</label>
@@ -79,6 +80,7 @@
                     </label>
                 </div>
             </div>
+            <p id="registerErrorMsg"></p>
             <button id="signUp" class="btn btn-primary">Sign Up</button>
         </form>
     </section>
@@ -102,7 +104,7 @@
                 <input type="text" class="form-control" id="patientPhoneInput" placeholder="Phone">
             </div>
             <button id="createPatientButton" class="btn btn-primary">Create Patient</button>
-            <p id="emergencyMsg"></p>
+            <p id="createPatientErrorMsg"></p>
         </form>
     </section>
 

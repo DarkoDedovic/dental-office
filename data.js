@@ -50,19 +50,16 @@ function sendData(url, method, isAuth, body) {
 
 function createPatientFunction(event) {
     event.preventDefault();
-    emergencyMsg.textContent = '';
+    createPatientErrorMsg.textContent = '';
 
     httpPost(ENDPOINT_PATIENTS, true, getCreatePatientData())
         .then(data => {
-            resetUI();
             show(allSectionDivs, patientsSection);
             getAllPatients();
+            resetUI(createPatientSection, createPatientErrorMsg, true, createPatientNavigationButton);
         }).catch((err) => {
-            console.log(err);
-            emergencyMsg.style.color = 'red';
-            emergencyMsg.textContent = 'Unesite ispravno podatke!';
-            emergencyMsg.style.color = 'red';
-            emergencyMsg.textContent = 'Mail je vec u upotrebi';
+            createPatientErrorMsg.style.color = 'red';
+            createPatientErrorMsg.textContent = `${err}`;
         })
 }
 
@@ -75,20 +72,14 @@ function logInFunction() {
     httpPost(ENDPOINT_SIGN_IN, false, getLogInData())
         // da li ovo obrisati ispod i greske hvatati samo u sendData funkciji ???
         .then(data => {
-            console.log(data);
-
-            if (data.accessToken == undefined) {
-                resetLogInInputs();
-                email.style.backgroundColor = 'red';
-                password.style.backgroundColor = 'red';
-                email.placeholder = data.error;
-                password.placeholder = data.error;
-            } else {
-                localStorage.setItem('token', JSON.stringify(data));
-                show(allSectionDivs, patientsSection);
-                getAllPatients();
-            }
-        }).catch(data => console.log(data))
+            localStorage.setItem('token', JSON.stringify(data));
+            show(allSectionDivs, patientsSection);
+            getAllPatients();
+            resetUI(loginFormDiv, logInErrorMsg);
+        }).catch(data => {
+            logInErrorMsg.style.color = 'red';
+            logInErrorMsg.textContent = data;
+        })
 }
 
 function registerFunction(event) {
@@ -98,10 +89,10 @@ function registerFunction(event) {
     }
     httpPost(ENDPOINT_SIGN_UP, false, getDataFromRegInputs())
         .then(() => {
-            resetRegisterInputs();
+            resetUI(registerFormDiv, registerErrorMsg);
             return;
         }).catch(data => {
-            alert(data);
+            registerErrorMsg.textContent = data;
         })
 }
 

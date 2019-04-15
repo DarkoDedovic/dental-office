@@ -1,4 +1,6 @@
 function show(divArray, shownDiv) {
+    console.log(divArray, shownDiv);
+    
     divArray.forEach(el => {
         if (el.id == shownDiv.id) {
             el.classList.remove('hide');
@@ -9,7 +11,6 @@ function show(divArray, shownDiv) {
             el.classList.add('hide');
         }
     })
-    console.log('divAray ' + divArray, 'shownDiv = ' + shownDiv);
 }
 
 function getCreatePatientData() {
@@ -22,19 +23,15 @@ function getCreatePatientData() {
     return JSON.stringify(inputsForCreatePatient);
 }
 
-function resetUI() {
-    patientNameInput.value = "";
-    patientLastNameInput.value = "";
-    patientEmailInput.value = "";
-    patientPhoneInput.value = "";
-    createPatientSection.classList.add('hide');
-    patientsSection.classList.remove("hide");
-    createPatientNavigationButton.classList.remove("hide");
-}
-
-function resetLogInInputs() {
-    email.value = '';
-    password.value = '';
+function resetUI(parentOfInputs, errorMsg, showOrHideButton, buttonForShown) {
+    const inputsNodeList = parentOfInputs.querySelectorAll('input');
+    inputsNodeList.forEach(el => {
+        el.value = '';
+    })
+    errorMsg.value = '';
+    if (showOrHideButton) {
+        buttonForShown.classList.remove('hide');
+    }
 }
 
 function getLogInData() {
@@ -66,12 +63,12 @@ function validate(regEmail, regUserName, regPassword, regConfirmPassword) {
     return validation;
 }
 
-function resetRegisterInputs() {
-    regEmail.value = '';
-    regUserName.value = '';
-    regPassword.value = '';
-    regConfirmPassword.value = '';
-}
+// function resetRegisterInputs() {
+//     regEmail.value = '';
+//     regUserName.value = '';
+//     regPassword.value = '';
+//     regConfirmPassword.value = '';
+// }
 
 function getDataFromRegInputs() {
     const inputsForRegister = {
@@ -126,19 +123,27 @@ createPatientButton.onclick = function (e) {
     createPatientFunction(e);
 };
 
-logInDiv.addEventListener('click', showLogin);
-registerDiv.addEventListener('click', showRegister);
+logInDiv.addEventListener('click', (e) => {
+    console.log(e);
+    // pronaci zasto ne reaguju LOGIN i REG divovi na klik
+    // e.stopPropagation();
+    // showLogin();
+});
+registerDiv.addEventListener('click', (e) => {
+    e.stopPropagation();
+    showRegister();
+});
 
 function showLogin() {
-    registerFormDiv.classList.add('hide');
-    loginFormDiv.classList.remove('hide');
+    show(logInAndRegDivsNodeList, loginFormDiv)
+    console.log('dada');
+
     logInDiv.classList.add('activeUnderline');
     registerDiv.classList.remove('activeUnderline');
 }
 
 function showRegister() {
-    loginFormDiv.classList.add('hide');
-    registerFormDiv.classList.remove('hide');
+    show(logInAndRegDivsNodeList, registerFormDiv)
     registerDiv.classList.add('activeUnderline');
     logInDiv.classList.remove('activeUnderline');
 }
