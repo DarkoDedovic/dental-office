@@ -1,8 +1,11 @@
 // validirati da li je token istekao ili nije, ako jeste, prikazi LOGin stranu, ako nije - prikazi ALL PATIENTS
 //kad ima token koji nije validan, otvori i logIn i createPatientNavigationButton  stranu 
+//nove pacijente nekada lepi na poslendje mesto, nekada na prvo ? 
 
 const logInAndRegisterSection = document.querySelector('#logInAndRegisterSection');
 const logInDiv = document.querySelector('#login-form-link');
+console.log(logInDiv);
+
 const registerDiv = document.querySelector('#register-form-link');
 const allSectionDivs = document.querySelectorAll("section");
 
@@ -54,27 +57,20 @@ const createPatientButton = document.querySelector('#createPatientButton');
 const singleCardSection = document.querySelector("#singleCardSection");
 
 // ALL PATIENTS DIV
+
 const patientsSection = document.querySelector("#patientsSection");
 const allPatientsDiv = document.querySelector('#allPatientsDiv');
-
-// PATIENT CARD 
 
 // GO TO CREATE PATIENT BUTTON
 
 const createPatientNavigationButton = document.querySelector("#createPatientNavigationButton");
 
-
 window.onload = function (e) {
-    console.log();
-    
     if (JSON.parse(localStorage.getItem("token")) == undefined) {
-        logInAndRegisterSection.classList.remove("hide");
-        changeUrl();
-
+        show(allSectionDivs, logInAndRegisterSection); 
     } else {
-        patientsSection.classList.remove("hide");
         getAllPatients();
-        changeUrl();
+        show(allSectionDivs, patientsSection)
     }
 }
 

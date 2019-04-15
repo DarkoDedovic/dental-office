@@ -1,11 +1,15 @@
-function changeUrl() {
-
-    allSectionDivs.forEach(sectionDiv => {
-
-        if (sectionDiv.classList.contains("hide") == false) {
-            doPushState(sectionDiv.id);
+function show(divArray, shownDiv) {
+    divArray.forEach(el => {
+        if (el.id == shownDiv.id) {
+            el.classList.remove('hide');
+            doPushState(shownDiv.id);
+            return;
+        }
+        if (el.classList.contains('hide') == false) {
+            el.classList.add('hide');
         }
     })
+    console.log('divAray ' + divArray, 'shownDiv = ' + shownDiv);
 }
 
 function getCreatePatientData() {
@@ -81,18 +85,10 @@ function getDataFromRegInputs() {
 
 function openSingleCard(name, lastName, phone, email, id) {
     singleCardSection.removeChild(singleCardSection.childNodes[0]);
-    allSectionDivs.forEach(sectionDiv => {
-        sectionDiv.classList.add('hide');
+    show(allSectionDivs, singleCardSection);
 
-        if (sectionDiv.id == 'singleCardSection') {
-            sectionDiv.classList.remove("hide");
-        }
-    })
-
-    // create node of string 'patients'
     const nodeCard = document.createRange().createContextualFragment(createSingleCard(name, lastName, phone, email, id));
     singleCardSection.appendChild(nodeCard);
-    changeUrl();
 }
 
 function createSingleCard(name, lastName, phone, email, id) {
@@ -117,10 +113,8 @@ function createSingleCard(name, lastName, phone, email, id) {
 
 createPatientNavigationButton.onclick = function (e) {
     e.preventDefault();
-    patientsSection.classList.add("hide");
-    createPatientSection.classList.remove("hide");
     this.classList.add('hide');
-    changeUrl();
+    show(allSectionDivs, createPatientSection);
 }
 
 logInBtn.onclick = function (e) {

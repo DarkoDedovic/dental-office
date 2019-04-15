@@ -55,8 +55,8 @@ function createPatientFunction(event) {
     httpPost(ENDPOINT_PATIENTS, true, getCreatePatientData())
         .then(data => {
             resetUI();
+            show(allSectionDivs, patientsSection);
             getAllPatients();
-            changeUrl();
         }).catch((err) => {
             console.log(err);
             emergencyMsg.style.color = 'red';
@@ -76,7 +76,7 @@ function logInFunction() {
         // da li ovo obrisati ispod i greske hvatati samo u sendData funkciji ???
         .then(data => {
             console.log(data);
-            
+
             if (data.accessToken == undefined) {
                 resetLogInInputs();
                 email.style.backgroundColor = 'red';
@@ -85,10 +85,8 @@ function logInFunction() {
                 password.placeholder = data.error;
             } else {
                 localStorage.setItem('token', JSON.stringify(data));
-                logInAndRegisterSection.classList.add("hide");
-                patientsSection.classList.remove('hide');
+                show(allSectionDivs, patientsSection);
                 getAllPatients();
-                changeUrl();
             }
         }).catch(data => console.log(data))
 }
@@ -111,7 +109,7 @@ function deletePatient(id) {
 
     httpDelete(`${ENDPOINT_DELETE}${id}`, true)
 
-        .then(() => window.location.reload())
+        .then(() => getAllPatients())
 }
 
 function getAllPatients() {
@@ -120,7 +118,6 @@ function getAllPatients() {
     }
     const token = JSON.parse(localStorage.getItem('token')).accessToken;
     console.log(token);
-    
 
     httpGet(ENDPOINT_PATIENTS, true)
 
