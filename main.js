@@ -2,11 +2,12 @@
 //kad ima token koji nije validan, otvori i logIn i createPatientNavigationButton  stranu 
 //nove pacijente nekada lepi na poslendje mesto, nekada na prvo ? 
 //createPatBTn se ne vidi ako se ide na back dugme
+//register - namestiti error msg i color, proveriti da li radi lepo 
 
 const logInAndRegisterSection = document.querySelector('#logInAndRegisterSection');
 const logInDiv = document.querySelector('#login-form-link');
-
 const registerDiv = document.querySelector('#register-form-link');
+
 const allSectionDivs = document.querySelectorAll("section");
 
 const baseUrl = window.location.origin;
@@ -45,7 +46,9 @@ const registerErrorMsg = document.querySelector("#registerErrorMsg");
 const gridCheck = document.querySelector('#gridCheck');
 const signUp = document.querySelector('#signUp');
 
-signUp.addEventListener('click', registerFunction);
+signUp.addEventListener('click', function (event) {
+    registerFunction(event)
+});
 
 // CREATE PATIENT PAGE
 
@@ -67,6 +70,7 @@ const singleCardSection = document.querySelector("#singleCardSection");
 
 const patientsSection = document.querySelector("#patientsSection");
 const allPatientsDiv = document.querySelector('#allPatientsDiv');
+const logOutButton = document.querySelector('#logOut');
 
 // GO TO CREATE PATIENT BUTTON
 
@@ -74,7 +78,9 @@ const createPatientNavigationButton = document.querySelector("#createPatientNavi
 
 window.onload = function (e) {
     if (JSON.parse(localStorage.getItem("token")) == undefined) {
-        show(allSectionDivs, logInAndRegisterSection); 
+        console.log('onload');
+
+        show(allSectionDivs, logInAndRegisterSection);
     } else {
         getAllPatients();
         show(allSectionDivs, patientsSection)
@@ -86,6 +92,15 @@ window.onpopstate = function (event) {
         sectionDiv.classList.add('hide');
         if (event.target.location.href.includes(sectionDiv.id)) {
             sectionDiv.classList.remove('hide');
+        }
+        if (event.target.location.href.includes('registerFormDiv') || event.target.location.href.includes('logInFormDiv')) {
+            // let idElem = window.location.pathname.split('/')[1];
+            // console.log(idElem);
+                                                    // NAMESTITI ONPOPSTATE ZA LOGIN I REGISTER 
+            // let shownElem = document.querySelector(`#${idElem}`)
+            // console.log(shownElem);
+            logInAndRegisterSection.classList.remove('hide');
+            // show(logInAndRegDivsNodeList, shownElem);
         }
     })
 }

@@ -89,9 +89,14 @@ function registerFunction(event) {
     }
     httpPost(ENDPOINT_SIGN_UP, false, getDataFromRegInputs())
         .then(() => {
-            resetUI(registerFormDiv, registerErrorMsg);
-            return;
+            console.log(logInAndRegisterSection);
+
+            show(logInAndRegDivsNodeList, loginFormDiv);
+            logInDiv.classList.add('activeUnderline');
+            registerDiv.classList.remove('activeUnderline');
+            resetUI(registerFormDiv, registerErrorMsg, false);
         }).catch(data => {
+            registerErrorMsg.style.color = 'red';
             registerErrorMsg.textContent = data;
         })
 }
@@ -134,3 +139,13 @@ function getAllPatients() {
             });
         })
 }
+
+function logOutFunction() {
+    localStorage.removeItem('token');
+}
+
+logOutButton.addEventListener("click", function () {
+    logOutFunction();
+    show(allSectionDivs, logInAndRegisterSection)
+
+});

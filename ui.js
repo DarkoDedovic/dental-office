@@ -1,13 +1,9 @@
 function show(divArray, shownDiv) {
-    console.log(divArray, shownDiv);
-    
     divArray.forEach(el => {
         if (el.id == shownDiv.id) {
-            el.classList.remove('hide');
+            shownDiv.classList.remove('hide');
             doPushState(shownDiv.id);
-            return;
-        }
-        if (el.classList.contains('hide') == false) {
+        } else {
             el.classList.add('hide');
         }
     })
@@ -28,7 +24,7 @@ function resetUI(parentOfInputs, errorMsg, showOrHideButton, buttonForShown) {
     inputsNodeList.forEach(el => {
         el.value = '';
     })
-    errorMsg.value = '';
+    errorMsg.textContent = '';
     if (showOrHideButton) {
         buttonForShown.classList.remove('hide');
     }
@@ -62,13 +58,6 @@ function validate(regEmail, regUserName, regPassword, regConfirmPassword) {
     }
     return validation;
 }
-
-// function resetRegisterInputs() {
-//     regEmail.value = '';
-//     regUserName.value = '';
-//     regPassword.value = '';
-//     regConfirmPassword.value = '';
-// }
 
 function getDataFromRegInputs() {
     const inputsForRegister = {
@@ -123,30 +112,17 @@ createPatientButton.onclick = function (e) {
     createPatientFunction(e);
 };
 
-logInDiv.addEventListener('click', (e) => {
-    console.log(e);
-    // pronaci zasto ne reaguju LOGIN i REG divovi na klik
-    // e.stopPropagation();
-    // showLogin();
-});
-registerDiv.addEventListener('click', (e) => {
-    e.stopPropagation();
-    showRegister();
-});
-
-function showLogin() {
-    show(logInAndRegDivsNodeList, loginFormDiv)
-    console.log('dada');
-
+logInDiv.addEventListener('click', () => {
+    show(logInAndRegDivsNodeList, loginFormDiv);
     logInDiv.classList.add('activeUnderline');
     registerDiv.classList.remove('activeUnderline');
-}
+});
 
-function showRegister() {
+registerDiv.addEventListener('click', () => {
     show(logInAndRegDivsNodeList, registerFormDiv)
     registerDiv.classList.add('activeUnderline');
     logInDiv.classList.remove('activeUnderline');
-}
+});
 
 function createPatientCards(name, lastName, phone, email, id) {
     return `<div class="card" id="pat${id}" style="width: 18rem;">
