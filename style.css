@@ -1,5 +1,5 @@
 body {
-    padding-top: 50px;
+    padding-top: 10px;
     box-sizing: border-box;
 }
 
@@ -65,7 +65,7 @@ form {
 }
 
 .hide {
-    display: none !important;
+    display: none;
 }
 
 .activeUnderline {
@@ -79,7 +79,7 @@ form {
 .required label:after {
     color: #e32;
     content: ' *';
-    display:inline;
+    display: inline;
 }
 
 
@@ -93,7 +93,19 @@ form {
     display: flex;
     justify-content: center;
     align-content: center;
+
+}
+
+.buttonsWrapper {
     
+    display: flex;
+    width: 95%;
+    padding: 20px;
+}
+
+.buttonsWidth {
+    width: 47%;
+    height: 40px;
 }
 
 #allPatientsDiv {
@@ -110,10 +122,12 @@ form {
     border-radius: 5px;
     padding: 1% 0;
     margin-bottom: 20px;
-    /* width: 40%; */
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
 @media only screen and (max-width: 600px) {
-    
-  }
+
+    .buttonsWidth {
+       
+    }
+}

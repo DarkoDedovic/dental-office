@@ -129,7 +129,7 @@ function getAllPatients() {
                     openSingleCard(pat.firstName, pat.lastName, pat.phoneNums, pat.email, pat._id)
                 });
 
-                nodeDiv.querySelector(".patientButton").addEventListener('click', event => {
+                nodeDiv.querySelector(".deletePatientButton").addEventListener('click', event => {
                     deletePatient(pat._id);
                     event.stopPropagation();
                 });

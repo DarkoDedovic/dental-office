@@ -89,9 +89,9 @@ function createSingleCard(name, lastName, phone, email, id) {
         <li class="list-group-item">${phone}</li>
         <li class="list-group-item">${email}</li>
     </ul>
-    <div class="card-body">
-        <a href="#" class="card-link">Card link</a>
-        <button class="btn btn-primary edit">Edit</button> 
+    <div class="card-body flex justify-between">     
+            <a href="#" class="card-link">Card link</a> 
+            <a href="#" class="card-link edit">Edit Patient</a>    
     </div>
 </div>`
     return singlePatientCard;
@@ -99,7 +99,7 @@ function createSingleCard(name, lastName, phone, email, id) {
 
 createPatientNavigationButton.onclick = function (e) {
     e.preventDefault();
-    this.classList.add('hide');
+    // this.classList.add('hide');
     show(allSectionDivs, createPatientSection);
 }
 
@@ -136,9 +136,10 @@ function createPatientCards(name, lastName, phone, email, id) {
                     <li class="list-group-item">${phone}</li>
                     <li class="list-group-item">${email}</li>
                 </ul>
-                <div class="card-body">
+                <div class="card-body flex justify-between">
+                
                     <a href="#" class="card-link">Card link</a>
-                    <button class="btn btn-primary patientButton">Delete Patient</button> 
+                    <a href="#" class="deletePatientButton card-link">Delete Patient</a> 
                 </div>
             </div>`
 }

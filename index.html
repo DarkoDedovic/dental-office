@@ -19,6 +19,9 @@
             href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js">
         <link rel="stylesheet"
             href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js">
+        <link
+            href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css"
+            rel="stylesheet">
         <link rel="stylesheet" href="./style.css">
 
         <!-- CONTAINER DIV -->
@@ -33,15 +36,17 @@
             </div>
             <!-- LOGIN -->
             <form id="logInFormDiv" class="loginForm shadow-none p-3 mb-5
-                bg-light rounded">
-                <div class="form-group">
+                bg-light rounded col-md-12">
+                <div class="form-group required">
                     <label for="inputUsername">Email</label>
-                    <input type="email" class="form-control" id="inputUsername"
+                    <input type="email" class="form-control required"
+                        id="inputUsername"
                         placeholder="Email">
                 </div>
-                <div class="form-group">
+                <div class="form-group required">
                     <label for="inputPassword">Password</label>
-                    <input type="text" class="form-control" id="inputPassword"
+                    <input type="text" class="form-control required"
+                        id="inputPassword"
                         placeholder="Password">
                 </div>
                 <div class="form-group form-check">
@@ -61,28 +66,28 @@
 
             <!-- REGISTER -->
             <form id="registerFormDiv" class="registerForm shadow-none p-3 mb-5
-                bg-light hide">
-                <div class="form-row">
-                    <div class="form-group col-md-12 required">
-                        <label for="regEmail">Email</label>
-                        <input type="email" class="form-control" id="regEmail"
-                            placeholder="Email">
-                    </div>
-                    <div class="form-group col-md-12 required">
-                        <label for="regUserName">Username</label>
-                        <input type="text" class="form-control" id="regUserName"
-                            placeholder="Username">
-                    </div>
-                    <div class="form-group col-md-12 required">
-                        <label for="regPassword">Password</label>
-                        <input type="password" class="form-control"
-                            id="regPassword" placeholder="Password">
-                    </div>
-                    <div class="form-group col-md-12 required">
-                        <label for="regConfirmPassword">Confirm password</label>
-                        <input type="password" class="form-control"
-                            id="regConfirmPassword" placeholder="Confirm Password">
-                    </div>
+                bg-light col-md-12 hide">
+                <div class="form-group required">
+                    <label for="regEmail">Email</label>
+                    <input type="email" class="form-control required"
+                        id="regEmail"
+                        placeholder="Email">
+                </div>
+                <div class="form-group required">
+                    <label for="regUserName">Username</label>
+                    <input type="text" class="form-control required"
+                        id="regUserName"
+                        placeholder="Username">
+                </div>
+                <div class="form-group required">
+                    <label for="regPassword">Password</label>
+                    <input type="password" class="form-control required"
+                        id="regPassword" placeholder="Password">
+                </div>
+                <div class="form-group required">
+                    <label for="regConfirmPassword">Confirm password</label>
+                    <input type="password" class="form-control required"
+                        id="regConfirmPassword" placeholder="Confirm Password">
                 </div>
                 <div class="form-group">
                     <div class="form-check">
@@ -103,20 +108,25 @@
             <div class="patientLogo">
                 <img src="./images/doctor.jpg" id="patientImg" alt="">
             </div>
-            <form action="">
-                <div class="form-group">
+            <form class="shadow-none p-3 mb-5
+                bg-light rounded col-md-12">
+                <div class="form-group required">
+                    <label for="patientNameInput">Patient Name</label>
                     <input type="text" class="form-control"
                         id="patientNameInput" placeholder="First Name">
                 </div>
-                <div class="form-group">
+                <div class="form-group required">
+                    <label for="patientLastNameInput">Patient Last Name</label>
                     <input type="text" class="form-control"
                         id="patientLastNameInput" placeholder="Last Name">
                 </div>
-                <div class="form-group">
+                <div class="form-group required">
+                    <label for="patientEmailInput">Patient Email</label>
                     <input type="text" class="form-control"
                         id="patientEmailInput" placeholder="Email">
                 </div>
-                <div class="form-group">
+                <div class="form-group required">
+                    <label for="patientPhoneInput">Patient Phone</label>
                     <input type="text" class="form-control"
                         id="patientPhoneInput" placeholder="Phone">
                 </div>
@@ -129,10 +139,13 @@
         <!-- ALL PATIENTS -->
 
         <section id="patientsSection" class="container hide">
-            <button id="logOut" class="btn btn-primary
-            mb-2">Log Out</button>
-            <button id="createPatientNavigationButton" class="btn btn-primary
-                mb-2">Create Patient</button>
+
+            <div class="buttonsWrapper justify-between">
+                <button id="logOut" class="btn btn-primary mb-2 buttonsWidth center">Log Out</button>
+                <button id="createPatientNavigationButton" class="btn
+                    btn-primary mb-2 buttonsWidth">Create Patient </button>
+            </div>
+
             <div id="allPatientsDiv" class="row">
 
             </div>
@@ -155,7 +168,7 @@
             integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
             crossorigin="anonymous"></script>
 
-            <script src="./main.js"></script>
+        <script src="./main.js"></script>
         <script src="./data.js"></script>
         <script src="./ui.js"></script>
     </body>

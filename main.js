@@ -1,7 +1,6 @@
 // validirati da li je token istekao ili nije, ako jeste, prikazi LOGin stranu, ako nije - prikazi ALL PATIENTS
 //kad ima token koji nije validan, otvori i logIn i createPatientNavigationButton  stranu 
 //nove pacijente nekada lepi na poslendje mesto, nekada na prvo ? 
-//createPatBTn se ne vidi ako se ide na back dugme
 //register - namestiti error msg i color, proveriti da li radi lepo 
 
 const logInAndRegisterSection = document.querySelector('#logInAndRegisterSection');
@@ -88,6 +87,9 @@ window.onload = function (e) {
 }
 
 window.onpopstate = function (event) {
+    if (JSON.parse(localStorage.getItem("token")) == undefined) {
+        show(allSectionDivs, logInAndRegisterSection);
+    }
     allSectionDivs.forEach(sectionDiv => {
         sectionDiv.classList.add('hide');
         if (event.target.location.href.includes(sectionDiv.id)) {
@@ -96,7 +98,7 @@ window.onpopstate = function (event) {
         if (event.target.location.href.includes('registerFormDiv') || event.target.location.href.includes('logInFormDiv')) {
             // let idElem = window.location.pathname.split('/')[1];
             // console.log(idElem);
-                                                    // NAMESTITI ONPOPSTATE ZA LOGIN I REGISTER 
+            // NAMESTITI ONPOPSTATE ZA LOGIN I REGISTER 
             // let shownElem = document.querySelector(`#${idElem}`)
             // console.log(shownElem);
             logInAndRegisterSection.classList.remove('hide');
