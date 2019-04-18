@@ -73,10 +73,8 @@ const logOutButton = document.querySelector('#logOut');
 
 const createPatientNavigationButton = document.querySelector("#createPatientNavigationButton");
 
-window.onload = function (e) {
+window.onload = e => {
     if (JSON.parse(localStorage.getItem("token")) == undefined) {
-        console.log('onload');
-
         show(allSectionDivs, logInAndRegisterSection);
     } else {
         getAllPatients();
@@ -84,10 +82,8 @@ window.onload = function (e) {
     }
 }
 
-window.onpopstate = function (event) {
+window.onpopstate = event => {
     if (JSON.parse(localStorage.getItem("token")) == undefined) {
-        console.log('onload');
-
         show(allSectionDivs, logInAndRegisterSection);
     }
     allSectionDivs.forEach(sectionDiv => {
@@ -107,6 +103,3 @@ window.onpopstate = function (event) {
     })
 }
 
-function doPushState(id) {
-    window.history.pushState({}, null, '/' + id);
-}

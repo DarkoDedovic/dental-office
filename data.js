@@ -13,7 +13,7 @@ const httpDelete = (url, isAuth) => {
 const sendData = (url, method, isAuth, body) => {
 
     const params = {
-        method: method,
+        method,
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
@@ -50,8 +50,6 @@ const sendData = (url, method, isAuth, body) => {
 const createPatientFunction = event => {
     event.preventDefault();
     createPatientErrorMsg.textContent = '';
-    const createPatientInputs = document.querySelector("#createPatientSection");
-    validate(createPatientInputs);
 
     httpPost(ENDPOINT_PATIENTS, true, getCreatePatientData())
         .then(data => {

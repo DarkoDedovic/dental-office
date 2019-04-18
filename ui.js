@@ -114,7 +114,7 @@ logInBtn.onclick = function (e) {
     logInFunction();
 };
 
-createPatientButton.onclick = function (e) {
+createPatientButton.onclick = (e) => {
     createPatientFunction(e);
 };
 
@@ -158,4 +158,8 @@ const createPatientCards = (name, lastName, phone, email, id) => {
                     <a href="#" class="deletePatientButton card-link">Delete Patient</a> 
                 </div>
             </div>`
+}
+
+function doPushState(id) {
+    window.history.pushState({}, null, '/' + id);
 }
