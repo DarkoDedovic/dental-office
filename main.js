@@ -1,7 +1,7 @@
 // validirati da li je token istekao ili nije, ako jeste, prikazi LOGin stranu, ako nije - prikazi ALL PATIENTS
 //kad ima token koji nije validan, otvori i logIn i createPatientNavigationButton  stranu 
 //nove pacijente nekada lepi na poslendje mesto, nekada na prvo ? 
-//register - namestiti error msg i color, proveriti da li radi lepo 
+//dodati back button na create patient page, na mobile vers
 
 const logInAndRegisterSection = document.querySelector('#logInAndRegisterSection');
 const logInDiv = document.querySelector('#login-form-link');
@@ -21,8 +21,6 @@ const ENDPOINT_DELETE = `${point}patients/`;
 
 //nodeList = logIn and reg div
 const logInAndRegDivsNodeList = logInAndRegisterSection.querySelectorAll('form');
-console.log(logInAndRegDivsNodeList);
-
 
 // LOGIN FORM
 const loginFormDiv = document.querySelector('.loginForm');
@@ -88,6 +86,8 @@ window.onload = function (e) {
 
 window.onpopstate = function (event) {
     if (JSON.parse(localStorage.getItem("token")) == undefined) {
+        console.log('onload');
+
         show(allSectionDivs, logInAndRegisterSection);
     }
     allSectionDivs.forEach(sectionDiv => {
@@ -95,15 +95,15 @@ window.onpopstate = function (event) {
         if (event.target.location.href.includes(sectionDiv.id)) {
             sectionDiv.classList.remove('hide');
         }
-        if (event.target.location.href.includes('registerFormDiv') || event.target.location.href.includes('logInFormDiv')) {
-            // let idElem = window.location.pathname.split('/')[1];
-            // console.log(idElem);
-            // NAMESTITI ONPOPSTATE ZA LOGIN I REGISTER 
-            // let shownElem = document.querySelector(`#${idElem}`)
-            // console.log(shownElem);
-            logInAndRegisterSection.classList.remove('hide');
-            // show(logInAndRegDivsNodeList, shownElem);
-        }
+        // if (event.target.location.href.includes('registerFormDiv') || event.target.location.href.includes('logInFormDiv')) {
+        //     // let idElem = window.location.pathname.split('/')[1];
+        //     // console.log(idElem);
+        //     // NAMESTITI ONPOPSTATE ZA LOGIN I REGISTER 
+        //     // let shownElem = document.querySelector(`#${idElem}`)
+        //     // console.log(shownElem);
+        //     logInAndRegisterSection.classList.remove('hide');
+        //     // show(logInAndRegDivsNodeList, shownElem);
+        // }
     })
 }
 

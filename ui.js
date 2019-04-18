@@ -1,4 +1,4 @@
-function show(divArray, shownDiv) {
+const show = (divArray, shownDiv) => {
     divArray.forEach(el => {
         if (el.id == shownDiv.id) {
             shownDiv.classList.remove('hide');
@@ -9,7 +9,7 @@ function show(divArray, shownDiv) {
     })
 }
 
-function getCreatePatientData() {
+const getCreatePatientData = () => {
     const inputsForCreatePatient = {
         firstName: patientNameInput.value,
         lastName: patientLastNameInput.value,
@@ -19,7 +19,7 @@ function getCreatePatientData() {
     return JSON.stringify(inputsForCreatePatient);
 }
 
-function resetUI(parentOfInputs, errorMsg, showOrHideButton, buttonForShown) {
+const resetUI = (parentOfInputs, errorMsg, showOrHideButton, buttonForShown) => {
     const inputsNodeList = parentOfInputs.querySelectorAll('input');
     inputsNodeList.forEach(el => {
         el.value = '';
@@ -30,7 +30,7 @@ function resetUI(parentOfInputs, errorMsg, showOrHideButton, buttonForShown) {
     }
 }
 
-function getLogInData() {
+const getLogInData = () => {
     const inputsForLogIn = {
         email: email.value,
         password: password.value
@@ -38,28 +38,30 @@ function getLogInData() {
     return JSON.stringify(inputsForLogIn);
 }
 
-function validate(regEmail, regUserName, regPassword, regConfirmPassword) {
-
+const validate = (parentOfInputs) => {
     let validation = false;
+    const inputsNodeList = parentOfInputs.querySelectorAll('.form-control');
+    console.log(inputsNodeList.length);
+    
 
-    [...arguments].forEach(arg => {
-        arg.style.backgroundColor = 'white';
-        if (arg.value == "") {
-            arg.style.backgroundColor = 'red';
+    inputsNodeList.forEach(input => {
+        input.style.backgroundColor = 'white';
+        if (input.value == "") {
+            input.style.backgroundColor = 'red';
             validation = true;
         }
     })
-    if (arguments.length > 2) {
-        if (arguments[2].value !== arguments[3].value) {
-            arguments[2].style.backgroundColor = 'red';
-            arguments[3].style.backgroundColor = 'red';
+    if (inputsNodeList.length > 2) {
+        if (inputsNodeList[2].value !== inputsNodeList[3].value) {
+            inputsNodeList[2].style.backgroundColor = 'red';
+            inputsNodeList[3].style.backgroundColor = 'red';
             validation = true;
         }
     }
     return validation;
 }
 
-function getDataFromRegInputs() {
+const getDataFromRegInputs = () => {
     const inputsForRegister = {
         email: regEmail.value,
         password: regPassword.value,
@@ -69,7 +71,7 @@ function getDataFromRegInputs() {
     return JSON.stringify(inputsForRegister)
 }
 
-function openSingleCard(name, lastName, phone, email, id) {
+const openSingleCard = (name, lastName, phone, email, id) => {
     singleCardSection.removeChild(singleCardSection.childNodes[0]);
     show(allSectionDivs, singleCardSection);
 
@@ -80,7 +82,7 @@ function openSingleCard(name, lastName, phone, email, id) {
     singleCardSection.appendChild(nodeCard);
 }
 
-function createSingleCard(name, lastName, phone, email, id) {
+const createSingleCard = (name, lastName, phone, email, id) => {
     const singlePatientCard = `<div class="card" id="pat${id}" style="width: 18rem;">
     <div class="flex justify-start"><a id="closeLink"><i class="fas fa-times" style='size: 2px'></i>Zatvori</a></div>
     <img src="./images/doctor4.jpg" class="card-img-top" alt="...">
@@ -128,7 +130,17 @@ registerDiv.addEventListener('click', () => {
     logInDiv.classList.remove('activeUnderline');
 });
 
-function createPatientCards(name, lastName, phone, email, id) {
+const logOutFunction = () => {
+    localStorage.removeItem('token');
+}
+
+logOutButton.addEventListener("click", function () {
+    logOutFunction();
+    show(allSectionDivs, logInAndRegisterSection)
+
+});
+
+const createPatientCards = (name, lastName, phone, email, id) => {
     return `<div class="card" id="pat${id}" style="width: 18rem;">
                 <img src="./images/doctor4.jpg" class="card-img-top" alt="...">
                 <div class="card-body">

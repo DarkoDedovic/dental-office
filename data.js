@@ -1,16 +1,16 @@
-function httpPost(url, isAuth, body) {
+const httpPost = (url, isAuth, body) => {
     return sendData(url, 'POST', isAuth, body);
 }
 
-function httpGet(url, isAuth) {
+const httpGet = (url, isAuth) => {
     return sendData(url, 'GET', isAuth);
 }
 
-function httpDelete(url, isAuth) {
+const httpDelete = (url, isAuth) => {
     return sendData(url, 'DELETE', isAuth);
 }
 
-function sendData(url, method, isAuth, body) {
+const sendData = (url, method, isAuth, body) => {
 
     const params = {
         method: method,
@@ -47,9 +47,11 @@ function sendData(url, method, isAuth, body) {
     });
 }
 
-function createPatientFunction(event) {
+const createPatientFunction = event => {
     event.preventDefault();
     createPatientErrorMsg.textContent = '';
+    const createPatientInputs = document.querySelector("#createPatientSection");
+    validate(createPatientInputs);
 
     httpPost(ENDPOINT_PATIENTS, true, getCreatePatientData())
         .then(data => {
@@ -62,9 +64,10 @@ function createPatientFunction(event) {
         })
 }
 
-function logInFunction() {
-
-    if (validate(email, password)) {
+const logInFunction = () => {
+    const logInInputs = document.querySelector('#logInFormDiv');
+    
+    if (validate(logInInputs)) {
         return;
     }
 
@@ -81,9 +84,12 @@ function logInFunction() {
         })
 }
 
-function registerFunction(event) {
+const registerFunction = event => {
     event.preventDefault();
-    if (validate(regEmail, regUserName, regPassword, regConfirmPassword)) {
+    let registerInputs = document.querySelector("#registerFormDiv");
+    console.log(registerInputs);
+    
+    if (validate(registerInputs)) {
         return;
     }
     httpPost(ENDPOINT_SIGN_UP, false, getDataFromRegInputs())
@@ -100,14 +106,14 @@ function registerFunction(event) {
         })
 }
 
-function deletePatient(id) {
+const deletePatient = id => {
 
     httpDelete(`${ENDPOINT_DELETE}${id}`, true)
 
         .then(() => getAllPatients())
 }
 
-function getAllPatients() {
+const getAllPatients = () => {
     while (allPatientsDiv.firstChild) {
         allPatientsDiv.firstChild.remove();
     }
@@ -138,13 +144,3 @@ function getAllPatients() {
             });
         })
 }
-
-function logOutFunction() {
-    localStorage.removeItem('token');
-}
-
-logOutButton.addEventListener("click", function () {
-    logOutFunction();
-    show(allSectionDivs, logInAndRegisterSection)
-
-});
