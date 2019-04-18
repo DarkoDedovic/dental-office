@@ -74,11 +74,15 @@ function openSingleCard(name, lastName, phone, email, id) {
     show(allSectionDivs, singleCardSection);
 
     const nodeCard = document.createRange().createContextualFragment(createSingleCard(name, lastName, phone, email, id));
+    const closeLink = nodeCard.querySelector("#closeLink");
+
+    closeLink.onclick = () => window.history.back();
     singleCardSection.appendChild(nodeCard);
 }
 
 function createSingleCard(name, lastName, phone, email, id) {
     const singlePatientCard = `<div class="card" id="pat${id}" style="width: 18rem;">
+    <div class="flex justify-start"><a id="closeLink"><i class="fas fa-times" style='size: 2px'></i>Zatvori</a></div>
     <img src="./images/doctor4.jpg" class="card-img-top" alt="...">
     <div class="card-body">
     Ime i Prezime:

@@ -28,7 +28,6 @@ function sendData(url, method, isAuth, body) {
         params.headers['Authorization'] = 'Bearer ' + JSON.parse(localStorage.getItem('token')).accessToken;
     }
 
-    // proveriti gde izbacuje gresku promise.rejected()
     return fetch(url, params).then(res => {
 
         if (res.status == 400) {
