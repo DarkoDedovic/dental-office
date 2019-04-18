@@ -43,8 +43,8 @@ const registerErrorMsg = document.querySelector("#registerErrorMsg");
 const gridCheck = document.querySelector('#gridCheck');
 const signUp = document.querySelector('#signUp');
 
-signUp.addEventListener('click', function (event) {
-    registerFunction(event)
+signUp.addEventListener('click', event => {
+    registerFunction(event);
 });
 
 // CREATE PATIENT PAGE
@@ -73,7 +73,9 @@ const logOutButton = document.querySelector('#logOut');
 
 const createPatientNavigationButton = document.querySelector("#createPatientNavigationButton");
 
-window.onload = e => {
+window.onload = () => {
+    console.log('ONLOAD');
+    
     if (JSON.parse(localStorage.getItem("token")) == undefined) {
         show(allSectionDivs, logInAndRegisterSection);
     } else {
@@ -82,7 +84,7 @@ window.onload = e => {
     }
 }
 
-window.onpopstate = event => {
+window.onpopstate = () => {
     if (JSON.parse(localStorage.getItem("token")) == undefined) {
         show(allSectionDivs, logInAndRegisterSection);
     }

@@ -38,11 +38,10 @@ const getLogInData = () => {
     return JSON.stringify(inputsForLogIn);
 }
 
-const validate = (parentOfInputs) => {
+const validate = parentOfInputs => {
     let validation = false;
     const inputsNodeList = parentOfInputs.querySelectorAll('.form-control');
     console.log(inputsNodeList.length);
-    
 
     inputsNodeList.forEach(input => {
         input.style.backgroundColor = 'white';
@@ -103,18 +102,17 @@ const createSingleCard = (name, lastName, phone, email, id) => {
     return singlePatientCard;
 }
 
-createPatientNavigationButton.onclick = function (e) {
+createPatientNavigationButton.onclick = e => {
     e.preventDefault();
-    // this.classList.add('hide');
     show(allSectionDivs, createPatientSection);
 }
 
-logInBtn.onclick = function (e) {
+logInBtn.onclick = e => {
     e.preventDefault();
     logInFunction();
 };
 
-createPatientButton.onclick = (e) => {
+createPatientButton.onclick = e => {
     createPatientFunction(e);
 };
 
@@ -134,7 +132,7 @@ const logOutFunction = () => {
     localStorage.removeItem('token');
 }
 
-logOutButton.addEventListener("click", function () {
+logOutButton.addEventListener("click", () => {
     logOutFunction();
     show(allSectionDivs, logInAndRegisterSection)
 

@@ -56,9 +56,9 @@ const createPatientFunction = event => {
             show(allSectionDivs, patientsSection);
             getAllPatients();
             resetUI(createPatientSection, createPatientErrorMsg, true, createPatientNavigationButton);
-        }).catch((err) => {
+        }).catch(err => {
             createPatientErrorMsg.style.color = 'red';
-            createPatientErrorMsg.textContent = `${err}`;
+            createPatientErrorMsg.textContent = err;
         })
 }
 
@@ -85,15 +85,12 @@ const logInFunction = () => {
 const registerFunction = event => {
     event.preventDefault();
     let registerInputs = document.querySelector("#registerFormDiv");
-    console.log(registerInputs);
     
     if (validate(registerInputs)) {
         return;
     }
     httpPost(ENDPOINT_SIGN_UP, false, getDataFromRegInputs())
         .then(() => {
-            console.log(logInAndRegisterSection);
-
             show(logInAndRegDivsNodeList, loginFormDiv);
             logInDiv.classList.add('activeUnderline');
             registerDiv.classList.remove('activeUnderline');
@@ -116,7 +113,6 @@ const getAllPatients = () => {
         allPatientsDiv.firstChild.remove();
     }
     const token = JSON.parse(localStorage.getItem('token')).accessToken;
-    console.log(token);
 
     httpGet(ENDPOINT_PATIENTS, true)
 
