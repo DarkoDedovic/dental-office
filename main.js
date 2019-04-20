@@ -3,90 +3,33 @@
 //nove pacijente nekada lepi na poslendje mesto, nekada na prvo ? 
 //dodati back button na create patient page, na mobile vers
 
-const logInAndRegisterSection = document.querySelector('#logInAndRegisterSection');
-const logInDiv = document.querySelector('#login-form-link');
-const registerDiv = document.querySelector('#register-form-link');
-
-const allSectionDivs = document.querySelectorAll("section");
-
-const baseUrl = window.location.origin;
-
-// https://dentministrator.herokuapp.com/api/ 
-
-const point = 'https://dentministrator.herokuapp.com/';
-const ENDPOINT_PATIENTS = `${point}patients`;
-const ENDPOINT_SIGN_IN = `${point}auth/signin`;
-const ENDPOINT_SIGN_UP = `${point}auth/signup`;
-const ENDPOINT_DELETE = `${point}patients/`;
-
-//nodeList = logIn and reg div
-const logInAndRegDivsNodeList = logInAndRegisterSection.querySelectorAll('form');
-
-// LOGIN FORM
-const loginFormDiv = document.querySelector('.loginForm');
-
-const email = document.querySelector('#inputUsername');
-const password = document.querySelector('#inputPassword');
-const logInErrorMsg = document.querySelector("#logInErrorMsg");
-const rememberMe = document.querySelector('#checkRemember');
-const logInBtn = document.querySelector('#logInBtn');
-const forgotPass = document.querySelector('#forgotPass');
-
-// REGISTER FORM
-const registerFormDiv = document.querySelector('.registerForm');
-
-const regEmail = document.querySelector('#regEmail');
-const regUserName = document.querySelector('#regUserName');
-const regPassword = document.querySelector('#regPassword');
-const regConfirmPassword = document.querySelector('#regConfirmPassword');
-const registerErrorMsg = document.querySelector("#registerErrorMsg");
-const gridCheck = document.querySelector('#gridCheck');
-const signUp = document.querySelector('#signUp');
-
-signUp.addEventListener('click', event => {
-    registerFunction(event);
-});
-
-// CREATE PATIENT PAGE
-
-const createPatientSection = document.querySelector('#createPatientSection');
-
-const patientNameInput = document.querySelector("#patientNameInput");
-const patientLastNameInput = document.querySelector("#patientLastNameInput");
-const patientEmailInput = document.querySelector("#patientEmailInput");
-const patientPhoneInput = document.querySelector("#patientPhoneInput");
-
-const createPatientErrorMsg = document.querySelector('#createPatientErrorMsg');
-const createPatientButton = document.querySelector('#createPatientButton');
-
-// SINGLE PAGE DIV
-
-const singleCardSection = document.querySelector("#singleCardSection");
-
-// ALL PATIENTS DIV
-
-const patientsSection = document.querySelector("#patientsSection");
-const allPatientsDiv = document.querySelector('#allPatientsDiv');
-const logOutButton = document.querySelector('#logOut');
-
-// GO TO CREATE PATIENT BUTTON
-
-const createPatientNavigationButton = document.querySelector("#createPatientNavigationButton");
 
 window.onload = () => {
     console.log('ONLOAD');
-    
-    if (JSON.parse(localStorage.getItem("token")) == undefined) {
-        show(allSectionDivs, logInAndRegisterSection);
+
+    setLoginClickListener((loginData) => {
+        logInFunction(loginData).then(data => {
+            localStorage.setItem('token', JSON.stringify(data));
+            show(PAGE_PATIENTS);
+            getAllPatients();
+            resetUI(loginFormDiv, logInErrorMsg);
+        }).catch(data => {
+            logInErrorMsg.style.color = 'red';
+            logInErrorMsg.textContent = data;
+        });
+    });
+
+    if (hasToken()) {
+        show(PAGE_PATIENTS);
     } else {
         getAllPatients();
-        show(allSectionDivs, patientsSection)
+        show(PAGE_LOGIN);
     }
 }
 
 window.onpopstate = () => {
-    if (JSON.parse(localStorage.getItem("token")) == undefined) {
-        show(allSectionDivs, logInAndRegisterSection);
+    if (hasToken()) {
+        show(PAGE_LOGIN);
     }
     allSectionDivs.forEach(sectionDiv => {
         sectionDiv.classList.add('hide');

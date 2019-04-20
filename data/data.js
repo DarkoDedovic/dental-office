@@ -25,7 +25,7 @@ const sendData = (url, method, isAuth, body) => {
     }
 
     if (isAuth) {
-        params.headers['Authorization'] = 'Bearer ' + JSON.parse(localStorage.getItem('token')).accessToken;
+        params.headers['Authorization'] = 'Bearer ' + getLocalToken().accessToken;
     }
 
     return fetch(url, params).then(res => {
@@ -47,13 +47,17 @@ const sendData = (url, method, isAuth, body) => {
     });
 }
 
+const getLocalToken = () => JSON.parse(localStorage.getItem('token')) || {};
+
+const hasToken = () => getLocalToken().accessToken;
+
 const createPatientFunction = event => {
     event.preventDefault();
     createPatientErrorMsg.textContent = '';
 
     httpPost(ENDPOINT_PATIENTS, true, getCreatePatientData())
         .then(data => {
-            show(allSectionDivs, patientsSection);
+            show(PAGE_PATIENT);
             getAllPatients();
             resetUI(createPatientSection, createPatientErrorMsg, true, createPatientNavigationButton);
         }).catch(err => {
@@ -62,25 +66,7 @@ const createPatientFunction = event => {
         })
 }
 
-const logInFunction = () => {
-    const logInInputs = document.querySelector('#logInFormDiv');
-    
-    if (validate(logInInputs)) {
-        return;
-    }
-
-    httpPost(ENDPOINT_SIGN_IN, false, getLogInData())
-        // da li ovo obrisati ispod i greske hvatati samo u sendData funkciji ???
-        .then(data => {
-            localStorage.setItem('token', JSON.stringify(data));
-            show(allSectionDivs, patientsSection);
-            getAllPatients();
-            resetUI(loginFormDiv, logInErrorMsg);
-        }).catch(data => {
-            logInErrorMsg.style.color = 'red';
-            logInErrorMsg.textContent = data;
-        })
-}
+const logInFunction = data => httpPost(ENDPOINT_SIGN_IN, false, data);
 
 const registerFunction = event => {
     event.preventDefault();
@@ -91,7 +77,7 @@ const registerFunction = event => {
     }
     httpPost(ENDPOINT_SIGN_UP, false, getDataFromRegInputs())
         .then(() => {
-            show(logInAndRegDivsNodeList, loginFormDiv);
+            show(PAGE_LOGIN);
             logInDiv.classList.add('activeUnderline');
             registerDiv.classList.remove('activeUnderline');
             resetUI(registerFormDiv, registerErrorMsg, false);
@@ -112,7 +98,6 @@ const getAllPatients = () => {
     while (allPatientsDiv.firstChild) {
         allPatientsDiv.firstChild.remove();
     }
-    const token = JSON.parse(localStorage.getItem('token')).accessToken;
 
     httpGet(ENDPOINT_PATIENTS, true)
 

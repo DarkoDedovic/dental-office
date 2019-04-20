@@ -1,12 +1,33 @@
-const show = (divArray, shownDiv) => {
-    divArray.forEach(el => {
-        if (el.id == shownDiv.id) {
-            shownDiv.classList.remove('hide');
-            doPushState(shownDiv.id);
-        } else {
-            el.classList.add('hide');
-        }
-    })
+const show = (page) => {
+    hideAllPagesAndSubpages();
+
+    switch (page) {
+        case PAGE_LOGIN:
+            logInAndRegisterSection.classList.remove('hide');
+            loginFormDiv.classList.remove('hide');
+            doPushState(loginFormDiv.id);
+            break;
+        case PAGE_REGISTER:
+            logInAndRegisterSection.classList.remove('hide');
+            registerFormDiv.classList.remove('hide');
+            doPushState(registerFormDiv.id);
+            break;
+        case PAGE_PATIENTS:
+            patientsSection.classList.remove('hide');
+            doPushState(patientsSection.id);
+            break;
+    
+        default:
+            break;
+    }
+}
+
+const hideAllPagesAndSubpages = () => {
+    const all = document.querySelectorAll(".page, .subpage");
+
+    all.forEach(el => {
+        el.classList.add('hide');
+    });
 }
 
 const getCreatePatientData = () => {
@@ -72,7 +93,7 @@ const getDataFromRegInputs = () => {
 
 const openSingleCard = (name, lastName, phone, email, id) => {
     singleCardSection.removeChild(singleCardSection.childNodes[0]);
-    show(allSectionDivs, singleCardSection);
+    show(PAGE_SINGLE_PATIENT);
 
     const nodeCard = document.createRange().createContextualFragment(createSingleCard(name, lastName, phone, email, id));
     const closeLink = nodeCard.querySelector("#closeLink");
@@ -104,26 +125,37 @@ const createSingleCard = (name, lastName, phone, email, id) => {
 
 createPatientNavigationButton.onclick = e => {
     e.preventDefault();
-    show(allSectionDivs, createPatientSection);
+    show(PAGE_CREATE_PATIENT);
 }
 
-logInBtn.onclick = e => {
-    e.preventDefault();
-    logInFunction();
-};
+signUp.addEventListener('click', event => {
+    registerFunction(event);
+});
+
+const setLoginClickListener = (onLogin) => {
+    logInBtn.onclick = e => {
+        e.preventDefault();
+
+        const logInInputs = document.querySelector('#logInFormDiv');
+    
+        if (!validate(logInInputs)) {
+            onLogin(getLogInData());
+        }
+    };
+}
 
 createPatientButton.onclick = e => {
     createPatientFunction(e);
 };
 
 logInDiv.addEventListener('click', () => {
-    show(logInAndRegDivsNodeList, loginFormDiv);
+    show(PAGE_LOGIN);
     logInDiv.classList.add('activeUnderline');
     registerDiv.classList.remove('activeUnderline');
 });
 
 registerDiv.addEventListener('click', () => {
-    show(logInAndRegDivsNodeList, registerFormDiv)
+    show(PAGE_REGISTER);
     registerDiv.classList.add('activeUnderline');
     logInDiv.classList.remove('activeUnderline');
 });
@@ -134,7 +166,7 @@ const logOutFunction = () => {
 
 logOutButton.addEventListener("click", () => {
     logOutFunction();
-    show(allSectionDivs, logInAndRegisterSection)
+    show(PAGE_LOGIN);
 
 });
 

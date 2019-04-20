@@ -27,7 +27,7 @@
 
         <!-- CONTAINER DIV -->
 
-        <section id='logInAndRegisterSection' class="container hide">
+        <section id='logInAndRegisterSection' class="container page hide">
             <div class="logoContainer">
                 <img class="logo" src="./images/doctor.jpg" alt="">
             </div>
@@ -36,7 +36,7 @@
                 <div><a class="" id="register-form-link">Register</a></div>
             </div>
             <!-- LOGIN -->
-            <form id="logInFormDiv" class="loginForm shadow-none p-3 mb-5
+            <form id="logInFormDiv" class="loginForm subpage shadow-none p-3 mb-5
                 bg-light rounded col-md-12">
                 <div class="form-group required">
                     <label for="inputUsername">Email</label>
@@ -66,7 +66,7 @@
             </form>
 
             <!-- REGISTER -->
-            <form id="registerFormDiv" class="registerForm shadow-none p-3 mb-5
+            <form id="registerFormDiv" class="registerForm subpage shadow-none p-3 mb-5
                 bg-light col-md-12 hide">
                 <div class="form-group required">
                     <label for="regEmail">Email</label>
@@ -105,7 +105,7 @@
         </section>
 
         <!-- CREATE PATIENT -->
-        <section id='createPatientSection' class="container hide">
+        <section id='createPatientSection' class="container page hide">
             <div class="patientLogo">
                 <img src="./images/doctor.jpg" id="patientImg" alt="">
             </div>
@@ -139,7 +139,7 @@
 
         <!-- ALL PATIENTS -->
 
-        <section id="patientsSection" class="container hide">
+        <section id="patientsSection" class="container page hide">
 
             <div class="buttonsWrapper justify-between">
                 <button id="logOut" class="btn btn-primary mb-2 buttonsWidth
@@ -155,7 +155,7 @@
 
         <!-- SINGLE PATIENT CARD  -->
 
-        <section id="singleCardSection" class="container hide">
+        <section id="singleCardSection" class="container page hide">
 
         </section>
 
@@ -171,8 +171,11 @@
             crossorigin="anonymous"></script>
 
         <script src="./main.js"></script>
-        <script src="./data.js"></script>
-        <script src="./ui.js"></script>
+        <script src="./data/constants.js"></script>
+        <script src="./data/data.js"></script>
+        <script src="./ui/elements.js"></script>
+        <script src="./ui/ui.js"></script>
+        
     </body>
 
 </html>
